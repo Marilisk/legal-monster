@@ -1,0 +1,15 @@
+
+.wrap {
+    display: flex;
+    //border: 1px solid orange;
+    margin: 20px 0;
+
+    & > div {
+        &:nth-child(2) {
+            flex: 3;
+
+
+        }
+    }
+
+}

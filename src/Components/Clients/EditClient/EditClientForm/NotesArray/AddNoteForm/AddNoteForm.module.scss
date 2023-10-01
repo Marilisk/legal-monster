@@ -1,0 +1,49 @@
+@use './../../../../../../vars.scss' as *;
+
+.wrap {
+    margin: 10px 0;
+    padding: 10px;
+    background: $super-light-gray;
+    background: $light-active-green;
+    border: $thin-gray-border;
+    border-radius: $commonBorderRadius;
+}
+
+
+.header, .firstLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.firstLine {
+    //border: 1px solid orange;
+    & > div {
+        &:first-child {
+            //border: 1px solid red;
+            flex: 2;
+            margin-right: 10px;
+        }
+        &:nth-child(2){
+            //border: 1px solid red;
+            flex: 1;
+            //align-self: auto;
+        }
+    }
+}
+
+.lineWrap {
+    position: relative;
+    //width: 100%;
+    .label {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        svg {
+            margin-right: 10px;
+        }
+    }
+   
+}
+

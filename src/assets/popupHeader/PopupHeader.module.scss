@@ -1,0 +1,32 @@
+@use './../../vars.scss' as *;
+
+.container {
+    width: 100%;
+    background: $light-active-green;
+    background: $violet-gray;
+    background: $active-green;
+    border-radius: 3px 3px 0 0;
+    padding: 30px;
+    color: white;
+
+}
+.wrap {
+    display:  flex;
+    justify-content: space-between;
+
+    p {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    button {
+        background: transparent;
+        //border: 1px solid red;
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        display: flex;
+        align-items: center;
+    }
+
+}

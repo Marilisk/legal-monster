@@ -1,0 +1,55 @@
+@use './../../vars.scss' as *;
+
+.wrap {
+    background: white;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    p {
+        text-align: center;
+    }
+}
+
+.container {
+    display: flex;
+    border-radius: 50px;
+    width: 92%;
+    height: 92%;
+    //border: 1px solid fuchsia;
+    border-radius: 50px;
+    overflow: hidden;
+    margin: 4% auto;
+    box-shadow: $popup-box-shadow;
+    &>div {
+        width: 50%;
+        padding: 10%;
+        //border: 1px solid blue;
+        &:last-child {
+            background: $active-green;
+            //background: $violet-gray;
+            //background: $brown;
+            color: white
+        }
+    }
+    h1 {
+        font-size: 20px;
+    }
+}
+
+.imgLogoWrap {
+    height: 50%;
+    margin: 30px auto;
+    background-image: url('./../../assets/images/our-lofinpage-image1.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;    
+}
+
+.registerOffer {
+    font-size: $small-fontSize;
+    button {
+        color: $active-green;
+    }
+}

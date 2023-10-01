@@ -1,0 +1,39 @@
+@use './../../../vars.scss' as *;
+
+
+.wrap {
+    font-size: $small-fontSize;
+    form {
+        border: 1px solid transparent;
+        margin: 20px 0;
+    }
+}
+
+.passwordLineWrap {
+    position: relative;
+    svg {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+    }
+}
+
+.rememberLabel {
+    margin-left: 4px;
+    span {
+        margin-left: 10px;
+    }
+}
+
+.btnWrap {
+    margin: 20px 0;
+    button {
+        width: 100%;
+    }
+}
+
+.error {
+    color: orangered;
+    text-align: center;
+    margin-top: 20px;
+}

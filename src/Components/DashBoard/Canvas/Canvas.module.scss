@@ -1,0 +1,14 @@
+@use './../../../vars.scss' as *;
+
+.canvasWrap {
+    //background: $violet-gray;
+    height: 440px;
+    //display: flex;
+
+    canvas {
+        border: 2px solid black;
+        margin: 0 auto;
+        display: block;
+        //background: $super-light-gray;
+    }
+}

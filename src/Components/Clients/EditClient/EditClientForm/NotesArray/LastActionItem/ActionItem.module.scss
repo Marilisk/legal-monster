@@ -1,0 +1,38 @@
+@use './../../../../../../vars.scss' as *;
+
+.wrap,
+.doneWrap {
+    display: flex;
+    margin: 10px 0;
+    border: $thin-gray-border;
+    border-radius: $commonBorderRadius;
+}
+
+.col, .doneCol,
+.titleCol {
+    padding: 10px;
+    border-right: 1px solid $light-border-gray;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.doneCol {
+    display: flex;
+    flex: 2;
+    justify-content: space-between;
+    position: relative;
+}
+
+.titleCol {
+    flex: 3;
+}
+
+.doneWrap {
+    .col {
+        color: $light-fontcolor;
+        & > div {
+            color: inherit;
+        }
+    }
+}

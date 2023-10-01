@@ -1,0 +1,64 @@
+@use'./../../vars.scss' as *;
+
+.wrapper {
+  height: 50px;
+  width: 100%;
+  background: $light-gray;
+  border-bottom: 1px solid $light-gray;
+  font-size: 18px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  margin-bottom: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 18px;
+    color: $dark-fontcolor;
+    span {
+      color: $active-green;
+      color: $brown;
+    }
+  }
+
+  a {
+    display: block;
+    height: 100%;
+    color: $gray-blue;
+    width: 120px;
+    font-size: $small-fontSize;
+  }
+
+  .linksWrapper {
+    width: 62%;
+    display: flex;
+
+    div {
+      width: fit-content;
+      margin: 0 auto;
+      margin-top: 14px;
+      //border: 1px solid orange;
+      transition: margin 100ms linear;
+      &:hover {
+        margin-top: 12px;
+      }
+    }
+  }
+
+  .activeLink {
+    color: $dark-fontcolor;
+    font-weight: 700;
+  }
+}
+
+.logoWrapper {
+  margin-top: 0px;
+  display: block;
+  margin-top: 8px;
+  min-width: 220px;
+  min-height: 72%;
+}

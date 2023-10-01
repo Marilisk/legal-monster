@@ -1,0 +1,41 @@
+@use './../../../vars.scss' as *;
+
+.wrap {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.item, .activeItem {
+    display: block;
+    padding: 10px;
+    color: $active-green;
+    font-size: $small-fontSize;
+    border-radius: 8px;
+
+    a {
+        div {
+            //color: $gray-blue;
+        }
+    }
+    .btn {
+        padding: 8px;
+
+    }
+}
+
+.activeItem {
+    color: $dark-fontcolor;
+    font-weight: 700;
+
+    a {
+        div {
+            color: $dark-fontcolor;
+        }
+
+    }
+    .btn {
+        background: $light-active-green;
+        //border: 1px solid orangered;
+
+    }
+}

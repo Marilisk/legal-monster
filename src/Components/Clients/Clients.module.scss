@@ -1,0 +1,29 @@
+@use './../../vars.scss' as *;
+
+.wrapper {
+  width: 100%;
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+  //display: flex;
+}
+
+.header {
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main {
+  //display: flex;
+  //border: $test-border;
+}
+
+.rightCol {
+  
+}
+
+.table {
+  border: $thin-gray-border;
+  border-radius: 3px;
+}
+

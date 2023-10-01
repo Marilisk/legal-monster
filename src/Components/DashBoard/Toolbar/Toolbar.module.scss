@@ -1,0 +1,19 @@
+@use './../../../vars.scss' as *;
+
+
+.wrap {
+    display: flex;
+    margin: 20px 0;
+}
+.penBtn {
+    border: 1px solid $violet-gray;
+    color: $violet-gray;
+    margin: 0 20px;
+    cursor: pointer;
+}
+
+.colorInput {
+    background: white;
+    height: 100%;
+    width: 70px;
+}

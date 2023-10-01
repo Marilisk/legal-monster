@@ -1,0 +1,15 @@
+@use './../vars.scss' as *;
+
+
+.appWrapper {
+  max-width: 1180px;
+  margin: 0 auto;
+  background: white;
+  min-height: 100vh;
+}
+.wrapper {
+  width: 100%;
+
+}
+
+

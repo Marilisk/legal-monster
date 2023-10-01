@@ -1,0 +1,159 @@
+@use './../../../vars.scss' as *;
+
+
+.container {
+    position: relative;
+}
+
+.monthSwitcher {
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+
+    & > div {
+        &:hover {
+            opacity: .7;
+        }
+    }
+
+    h3 {
+        width: 130px;
+        width: fit-content;
+    }    
+}
+
+.box, .hidden, .btnBox {
+    box-shadow: 2px 2px 19px 4px rgba(152, 179, 174, .3);
+    position: absolute;
+    //top: -6px;
+    transition: 100ms linear;
+    z-index: 1;
+    background: white;
+}
+
+.flex {
+    display: flex;
+    border-bottom: 1px solid $light-border-gray;
+    @media (max-width: 500px) {
+        display: block;
+    }
+}
+
+.btnsWrap {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+
+.wrap,
+.hidden,
+.timeWrap {
+    transition: 100ms linear;
+}
+
+.hidden {
+    transform: scale(0);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: white;
+}
+
+
+.ceil,
+.anotherMonthCeil,
+.chosenDay,
+.today {
+    transition: 100ms linear;
+    cursor: pointer;
+    span {
+        text-align: center;
+        display: block;
+        padding: 12px;
+    }
+    &:hover {
+        background: $light-border-gray;
+    }
+}
+
+.anotherMonthCeil {
+    color: $gray;
+}
+
+.chosenDay,
+.chosenDay:hover {
+    background: $violet-gray;
+    color: white;
+}
+
+.today {
+    font-weight: 700;
+}
+
+.timeWrap {
+    left: 292px;
+    height: 261px;
+    border-left: 1px solid $light-border-gray;
+    display: flex;
+    @media (max-width: 500px) {
+        border-top: 1px solid $light-border-gray;
+        //display: block;
+    }
+}
+
+.timeCeil, .chosenTimeCell {
+    font-size: 20px;
+    padding: 4px 14px;
+    cursor: pointer;
+    transition: 100ms linear;
+
+    //border: $test-border;
+    &:hover {
+        background: $light-border-gray;
+    }
+}
+.chosenTimeCell, 
+.chosenTimeCell:hover {
+    background: $violet-gray;
+    color: white;
+}
+
+.hoursWrap {
+    h3 {
+        display: block;
+        padding-top: 10px;
+        height: 48px;
+    }
+    height: 100%;
+    width: 70px;
+    &:last-child {
+        border-left: 1px solid $light-border-gray;
+        border-right: 1px solid $light-border-gray;
+    }
+
+    @media (max-width: 500px) {
+        margin: 0 40px;
+        border-left: 1px solid $light-border-gray;
+        border-right: 1px solid $light-border-gray;
+    }
+}
+
+.hours {
+    //border: $test-border;
+    overflow-y: scroll;
+    height: calc(100% - 48px);
+
+    @media (pointer: fine) {
+        &::-webkit-scrollbar {
+            width: 6px;
+            background: white;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $light-border-gray;
+            border-radius: 2px;
+        }
+    }
+}

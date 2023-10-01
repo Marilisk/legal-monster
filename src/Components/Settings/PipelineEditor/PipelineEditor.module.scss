@@ -1,0 +1,80 @@
+@use './../../../vars.scss' as *;
+
+.wrap {
+    padding: 20px;
+
+}
+
+.colorDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.itemWrap {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+
+    & > div {
+        margin-right: 10px;
+    }
+}
+
+.title {
+    flex: 3;
+}
+
+.number {
+    width: 30px;
+    //border: 1px solid red;
+
+}
+
+.addBtn {
+    border: 1px solid transparent;
+    border-radius: 50%;
+    transition: all 200ms linear;
+    &:hover {
+        box-shadow: $popup-box-shadow;
+    }
+}
+
+.formWrap {
+    margin: 20px 0;
+    //padding: 20px;
+    border: solid $light-border-gray;
+    border-width: 1px 0 1px 0;
+    padding-bottom: 10px;
+}
+
+.deleteBtn {
+    flex: 1;
+
+}
+.editBtn {
+    flex: 1;
+}
+
+.editibleTitle, .disabledTitle {
+    border: 1px solid transparent;
+    pointer-events: none;
+    width: 100%;
+}
+.editibleTitle {
+    pointer-events: all;
+    border-color: unset;
+}
+
+.firstLine {
+    display: flex;
+    align-items: baseline;
+    align-items: baseline;
+    & > div {
+        &:first-child {
+            width: 20%;
+            margin-right: 10px;
+        }
+
+    }
+}

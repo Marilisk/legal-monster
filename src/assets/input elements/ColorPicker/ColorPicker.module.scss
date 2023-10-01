@@ -1,0 +1,26 @@
+@use './../../../vars.scss' as *;
+
+.colorInput {
+    padding: 10px 0;
+    cursor: pointer;
+    label {
+        font-size: $small-fontSize;
+        display: flex;
+        align-items: center;
+        span {
+            margin-right: 10px;
+        }
+    }
+    input {
+        //visibility: hidden;
+        background: white;
+        border: none;
+        display: block;
+    }
+}
+/* .colorDot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+
+} */

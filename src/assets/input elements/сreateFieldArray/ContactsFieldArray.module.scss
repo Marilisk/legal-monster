@@ -1,0 +1,61 @@
+@use './../../../vars.scss' as *;
+
+
+.arrayWrapper {
+    border-radius: 3px;
+    border: 1px solid $light-gray;
+    padding-top: 10px;
+    width: 100%;
+}
+
+.header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+
+    h3 {
+        margin-right: 20px;
+        flex: 5;
+    }
+
+    svg {
+        height: 22px;
+        width: 30px;
+    }
+}
+
+.grid {
+    transition: all 100ms linear;
+}
+
+.line {
+    display: flex;
+    padding: 10px;
+    max-width: 100%;
+    border-bottom: 1px solid $light-gray;
+    &:last-child {
+        border-color: transparent;
+    }
+    input {
+        display: block;
+        flex: 2;
+        font-weight: 600;
+        padding: 4px;
+        padding-right: 0px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        color: #666666;
+        width: 100px;
+        &:focus {
+            border: 1px solid $light-border-gray;
+        }
+
+        &::placeholder {
+            color: $light-fontcolor;
+            font-style: italic;
+        }
+    }
+}
+

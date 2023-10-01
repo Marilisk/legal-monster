@@ -1,0 +1,30 @@
+@use './../../vars.scss' as *;
+
+.wrapper {
+    position: fixed;
+    background: white;
+    top: 10vh;
+    z-index: 1;
+    border-radius: $commonBorderRadius;
+    box-shadow: $popup-box-shadow;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.backGround {
+    position: absolute;
+    background: $transparent-back;
+    height: 150vh;
+    //height: 100%;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    //border: 2px solid rebeccapurple;
+    
+}
+
+/* .rootEl {
+    border: 1px solid red;
+    background: yellow;
+    height: 200px;
+} */

@@ -1,0 +1,45 @@
+@use './../../../../../../vars.scss' as *;
+
+.currentItem {
+    border: $thin-gray-border;
+    border-radius: $commonBorderRadius;
+
+    div:not(.currentFields) {
+        //margin: 10px 30px;
+    }
+}
+.currentTitle {
+    font-weight: 800;
+    margin: 10px 30px;
+}
+.currentText {
+    color: $light-fontcolor;
+    margin: 10px 30px;
+}
+.currentFields {
+    display: flex;
+    align-items: stretch;
+    //justify-content: space-around;
+    border-top: 1px solid $light-border-gray;
+    //border: 1px solid red;
+    padding: 0;
+    & > div {
+        border-right: 1px solid $light-border-gray;
+        flex: 1;
+        padding: 10px;
+        &:last-child {
+            border: none;
+        }
+    }
+}
+.name {
+    color: $light-fontcolor;
+}
+
+.part {
+    display: flex;
+    align-items: center;
+    & > div {
+        margin-right: 10px;
+    }
+}

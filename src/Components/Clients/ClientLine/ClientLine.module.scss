@@ -1,0 +1,97 @@
+@use './../../../vars.scss' as *;
+
+
+.wrap {
+  padding: .4em;
+  transition: 100ms linear;
+  border-bottom: 1px solid $light-border-gray;
+  cursor: pointer;
+
+  //border: 1px solid blue;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    font-weight: 500;
+  }
+}
+
+.flexLine,
+.headerLine {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px 0;
+  height: 60px;
+  //border: 1px solid orange;
+
+
+  & > div {
+    width: 17%;
+
+    &:nth-child(1) {
+      width: 20%;
+    }
+    &:nth-child(4) {
+      width: 10%;
+    }
+  }
+}
+
+.headerLine {
+  font-weight: 700;
+  padding: 0 10px;
+  position: relative;
+  &>div {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.accordeon, 
+.hiddenAccordeon {
+    width: 230px;
+    box-shadow: 2px 2px 19px 4px rgba(152, 179, 174, .3);
+    position: absolute;
+    top: 54px;
+    padding: 10px;
+    //left: 0px;
+    transition: 100ms linear;
+    z-index: 1;
+    background: white;
+    border-radius: 4px;
+
+}
+.hiddenAccordeon {
+    transform: scale(0);
+}
+
+.personCol {
+  div {
+    &:nth-child(3) {
+      color: $light-fontcolor;
+    }
+  }
+}
+
+.phaseCol {
+  //border: 1px solid hotpink;
+  display: flex;
+  align-items: center;
+  & > div {
+    //border: 1px solid gray;
+    border-radius: 50%;
+    margin: 0 10px;
+    width: 7px;
+    height: 7px;
+  }
+}
+
+.arrowOn, .arrowOff {
+  transition: 100ms linear;
+}
+.arrowOff {
+  transform: scale(0);
+  //display: none;
+}

@@ -1,0 +1,18 @@
+@use './../../../vars.scss' as *;
+
+.wrap {
+    font-size: $small-fontSize;
+    transition: all 200ms linear;
+    //border: 1px solid orange;
+    width: 68vw;
+    border-radius: 20px;
+    @media screen and (max-width: 1200px) {
+        width: 80vw;
+    }
+    @media screen and (max-width: 900px) {
+        width: 90vw;
+    }
+    @media screen and (max-width: 600px) {
+        width: 96vw;
+    }
+}

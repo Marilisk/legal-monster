@@ -1,0 +1,78 @@
+@use './../../../../../vars.scss' as *;
+
+.wrap {
+    margin: 20px;
+}
+.flex {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    //border: 1px solid darkblue;
+}
+.chosen {
+    flex: 2;
+
+}
+.manager {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: fit-content;
+    padding: 6px;
+    border-radius: 6px;
+    border: $thin-gray-border;
+    cursor: pointer;
+    svg {
+        margin-left: 4px;
+    }
+}
+.variantsWrap {
+    flex: 1;
+    //border: 1px solid green;
+    position: relative;
+    padding: 6px;
+}
+
+.header {
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    border: solid $active-green;
+    border-width: 0 0 0 3px;
+    
+    p {
+        margin: 0 8px;
+    }
+}
+
+.varsSelect, .varsNone {
+    transition: transform 100ms linear;
+    position: absolute;
+    top: 32px;
+    box-shadow: $popup-box-shadow;
+    width: 216px;
+    cursor: pointer;
+}
+/* .varsNone {
+    transform: scale(0);
+} */
+.variant, .none {
+    transition: transform 100ms linear;
+    // /border: 1px solid palevioletred;
+    padding: 6px;
+    &:hover {
+        background: $light-gray;
+    }
+
+}
+
+.none, .varsNone {
+    transform: scale(0);
+    display: none;
+    pointer-events: none;
+}
+
+
+
+

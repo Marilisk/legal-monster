@@ -1,0 +1,38 @@
+@use './../../../vars.scss' as *;
+
+.btn,
+.hiddenBtn {
+    padding: 4px 0;
+    border-radius: 4px;
+    //height: 30px;
+    transition: all 200ms linear;
+    color: $active-green;
+    display: flex;
+    align-items: center;
+    //border: 1px solid orange;
+    & > div {
+        margin: 0 auto;
+    }
+
+    &:hover {
+        background: $light-gray;
+        & div {
+            color: white;
+            color: $active-green;
+        }
+    }
+
+    &:disabled {
+        color: $light-fontcolor;
+
+        &:hover {
+            background: white;
+        }
+    }
+}
+
+.hiddenBtn {
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+}

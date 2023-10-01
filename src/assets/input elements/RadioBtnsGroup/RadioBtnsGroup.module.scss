@@ -1,0 +1,38 @@
+@use './../../../vars.scss' as *;
+
+.radioWrap {
+    display: flex;
+    width: 100%;
+    margin: 20px 0 40px 0;
+    align-items: center;
+
+    label {
+        display: block;
+        cursor: pointer;
+        min-height: 44px;
+    }
+
+    div {
+        transition: 100ms linear;
+        background: $light-active-green;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+
+        span {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    input {
+        display: none;
+
+        &:checked + div {
+            font-weight: 700;
+            background: $active-green;
+            color: white;
+        }
+    }
+}

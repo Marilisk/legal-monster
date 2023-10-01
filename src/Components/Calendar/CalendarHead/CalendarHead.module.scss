@@ -1,0 +1,13 @@
+@use './../../../vars.scss' as *;
+
+.wrap {
+  display: flex;
+  color: $gray-blue;
+  font-size: $small-fontSize;
+}
+.item {
+  width: 14.29%;
+  text-align: center;
+}
+
+

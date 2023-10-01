@@ -1,0 +1,22 @@
+@use './../../../vars.scss' as *;
+
+
+.period {
+  text-align: center;
+  display: flex;
+  //border: 1px solid orange;
+
+  &>div {
+    padding: 6px 0 10px 0;
+    width: 120px;
+
+    &:nth-child(odd) {
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+
+}

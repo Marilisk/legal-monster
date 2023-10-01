@@ -1,0 +1,11 @@
+@use './../../../../vars.scss' as *;
+
+
+.wrap {
+    font-size: $small-fontSize;
+}
+
+.formBodyWrap {
+    //border: 1px solid orange;
+    margin: 20px;
+}

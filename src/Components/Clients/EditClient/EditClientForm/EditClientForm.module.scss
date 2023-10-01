@@ -1,0 +1,25 @@
+@use './../../../../vars.scss' as *;
+
+
+
+.formBodyWrap {
+    margin: 20px;
+    //border: 1px solid red;
+}
+
+.block, .hiddenBlock {
+    transition: all 200ms linear;
+    background: white;
+    display: flex;
+    & > div {
+        margin-right: 10px;
+        &:first-child {
+            flex: 1;
+        }
+    }
+}
+.hiddenBlock {
+    //transform: scale(0);
+    height: 0;
+    opacity: 0;
+}

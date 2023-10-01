@@ -1,0 +1,53 @@
+@use './../../../vars.scss' as *;
+
+.rightBths {
+    margin: auto 0 auto auto;
+    display: flex;
+  
+    button {
+      margin: 0 10px;
+      //height: 30px;
+      padding: 4px;
+      border: $thin-gray-border;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      color: $gray-blue;
+      svg {
+        fill: $gray-blue;
+        //border: 1px solid red;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+      }
+      span {
+        margin-left: 4px;
+        font-size: 12px;
+      }
+  
+      &:hover {
+        color: $dark-fontcolor;
+        //font-weight: 700;
+        svg {
+          fill: $dark-fontcolor;
+        }
+      }
+    }
+
+
+    @media screen and (max-width: 756px) {
+      //border: 1px solid darkblue;
+
+      button {
+        span {
+          display: none;
+        }
+      }
+    }
+
+    @media screen and (max-width: 680px) {
+      //border: 1px solid darkblue;
+      margin: 20px auto;
+      
+    }
+  }

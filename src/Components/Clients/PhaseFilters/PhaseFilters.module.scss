@@ -1,0 +1,56 @@
+@use './../../../vars.scss' as *;
+
+.wrap {
+    //border: 1px solid pink;
+    margin-right: 1%;
+    //position: relative;
+
+}
+
+.header {
+    font-weight: 700;
+}
+
+.filterItem {
+    margin: 10px;
+    padding: 4px;
+
+    label {
+        display: flex;
+        align-items: center;
+        div {
+            margin: 0 10px;
+            width: 10px;
+            min-width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    }
+    
+}
+
+.all {
+    label {
+        display: flex;
+        align-items: center;
+        border: 1px solid palegreen;
+    }
+    
+    h2 {
+        margin: 0 10px;
+    }
+}
+
+.labelText {
+    margin: 0 4px 0 0;
+}
+.titleBox {
+    opacity: .5;
+
+}
+.amount {
+    color: $gray;
+    font-size: 12px;
+    display: block;
+    margin: 0 0 0 auto;
+}

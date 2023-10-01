@@ -1,0 +1,122 @@
+@use './../../vars.scss' as *;
+
+
+.wrap {
+  min-height: 100vh;
+  font-size: $small-fontSize;
+  margin: 0px;
+}
+
+.flexHead {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  color: $gray-blue;
+  margin: 30px 0;
+  @media (max-width: 680px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: $light-border-gray;
+  border: $thin-gray-border;
+}
+
+.viewPeriod {
+  display: flex;
+  margin: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.periodName,
+.chosenPeriodName {
+  margin: 0 20px;
+}
+
+.chosenPeriodName {
+  font-weight: 700;
+  color: $dark-fontcolor;
+}
+
+.rightBths {
+  margin: auto 0 auto auto;
+
+  button {
+    margin: 0 10px;
+    padding: 4px;
+    border: $thin-gray-border;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    color: $gray-blue;
+
+    svg {
+      fill: $gray-blue;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+    }
+
+    span {
+      margin-left: 4px;
+      font-size: 12px;
+    }
+
+    &:hover {
+      color: $dark-fontcolor;
+      svg {
+        fill: $dark-fontcolor;
+      }
+    }
+  }
+}
+
+
+.form,
+.hiddenForm {
+  position: absolute;
+  transform: scale(0);
+  transition: 100ms linear;
+  pointer-events: none;
+  height: 78vh;
+  top: 15vh;
+  width: 500px;
+  background: white;
+  border-radius: 2px;
+  box-shadow: $popup-box-shadow;
+}
+
+.form {
+  transform: scale(1);
+  pointer-events: all;
+
+  @media screen and (max-width: 1200px) {
+    width: 450px;
+  }
+  @media screen and (max-width: 1100px) {
+    width: 400px;
+  }
+  @media screen and (max-width: 1000px) {
+    width: 500px;
+  }
+  @media (max-width: 530px) {
+    width: 480px;
+  }
+  @media (max-width: 500px) {
+    width: 400px;
+    height: 96vh;
+    top: 8vh;
+  }
+  @media (max-width: 420px) {
+    width: 380px;
+    height: 100%;
+    top: 7vh;
+  }
+}
