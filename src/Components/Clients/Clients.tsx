@@ -7,7 +7,7 @@ import { TableHeader } from "./TableHeader/TableHeader";
 import { createPortal } from "react-dom";
 import NewClient from "./NewClient/NewClient";
 import { setOpenedFilter } from "../../redux/clientsSlice";
-import EditClient from "./EditClient/EditClient";
+import EditClient from "./EditClient/Client";
 import { IClient, SalesPhaseType } from "../../types/clientsTypes";
 import { filterClients } from "./functions/filter";
 import { createModal } from "../../utils/DialogCreator/DialogCreator";
@@ -33,9 +33,8 @@ export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEd
     console.log(testArr.sort((a, b) => a - b)) */
 
     const pipelineState = useAppSelector(s => s.auth.loginData.data?.ownerSettings.salesPipeline)
-    const defaultPipeline = useAppSelector(s => s.clients.salesPipeline)
-    const isCustom = pipelineState?.isCustom
-    let salesPipeline = isCustom ? pipelineState.pipeline : defaultPipeline
+    const defaultPipeline = useAppSelector(s => s.clients.salesPipeline) 
+    let salesPipeline = pipelineState?.isCustom ? pipelineState.pipeline : defaultPipeline
     const openedFilter = useAppSelector(s => s.clients.openedFilter)
     const handleSelectFilter = (e: React.MouseEvent) => {
         const element = (e.target as HTMLElement).closest('[id]') as HTMLElement
@@ -78,9 +77,9 @@ export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEd
                         let salesphase = salesPipeline.find((phase: SalesPhaseType) => phase.stepNumber === el.phase.number) || null
                         return <ClientLine key={i} client={el} salesphase={salesphase} />
                     })}
-
                 </div>
-                {!clients.length && <div>Пока нет клиентов</div>}
+
+                { !clients.length && <div>Пока нет клиентов</div> }
 
             </div>
         </div>

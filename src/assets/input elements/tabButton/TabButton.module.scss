@@ -1,0 +1,43 @@
+@use './../../../vars.scss' as *;
+
+.btn, .hiddenBtn, .activeBtn {
+    padding: 0;
+    //border: 1px solid $gray-blue;
+    border-radius: 4px;
+    background: transparent;
+    width: 120px;
+    height: 30px;
+    transition: $common-transition;
+
+    a {
+        color: unset;
+    }
+
+    &:disabled:hover,
+    &:disabled {
+        color: $gray;
+        border: 1px solid $gray;
+        cursor: auto;
+    }
+
+    &:hover {
+        color: white;
+        border-color: $active-green;
+        background: $active-green;
+
+        & div {
+            color: white;
+        }
+    }
+}
+
+.activeBtn {
+    border: 1px solid $gray-blue;
+
+}
+
+.hiddenBtn {
+    opacity: 0;
+    height: 0;
+    pointer-events: none;
+}

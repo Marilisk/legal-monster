@@ -1,65 +1,46 @@
 import { FC, useEffect, useState } from 'react';
-import c from './NotesArray.module.scss'
-import { INote } from '../../../../../types/clientsTypes';
+import c from './ActivityArray.module.scss'
+import { ClientActivityType, IActivity } from '../../../../../types/clientsTypes';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import CurrentNote from './CurrentNote/CurrentNote';
 import AddNoteForm from './AddNoteForm/AddNoteForm';
 import { NoBorderButton } from '../../../../../assets/input elements/NoBorderButton/NoBorderButton';
 import { ActionsItem } from './LastActionItem/ActionItem';
-import { fetchDeleteNote, fetchEditNote, fetchGetClientNotes, syncEditClient } from '../../../../../redux/clientsSlice';
+import { fetchDeleteNote, fetchEditNote, syncEditClient } from '../../../../../redux/clientsSlice';
+import AddActivityBtns from './AddActivityBtns/AddActivityBtns';
 
-interface INotesArrayProps {
-    array: INote[] | undefined
+interface IActivityArrayProps {
+    array: IActivity[] | undefined
     title: string
     clientId: string
 }
 
-interface IAddNoteBtnProps {
-    array: INote[] | undefined
-    title: string
-    isFormVisible: boolean
-    setFormVisible: (arg: boolean) => void
-}
 
-const AddNoteBtn: FC<IAddNoteBtnProps> = ({ array, title, setFormVisible, isFormVisible }: IAddNoteBtnProps) => {
-
-
-    return <div className={c.header} >
-        <h3>{(!array || !array.length) ? 'пока не было активности...' : title} </h3>
-        <NoBorderButton type='button' callBack={() => setFormVisible(!isFormVisible)} visible={!isFormVisible}>
-            <div>добавить</div>
-        </NoBorderButton>
-    </div>
-
-}
-
-const NotesArray: FC<INotesArrayProps> = ({ array, title, clientId }: INotesArrayProps) => {
+const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IActivityArrayProps) => {
 
     const authUser = useAppSelector(s => s.auth.loginData.data)
     const fullName = authUser?.fullName
     const authorId = authUser?._id
     const [isFormVisible, setFormVisible] = useState(false)
+    const [editibleNote, setEditibleNoteItem] = useState<IActivity | undefined>()
     const [hoveredLine, setHoveredLine] = useState('')
 
+    const [formActivityType, setFormActivityType] = useState<ClientActivityType>()
+    
     const dispatch = useAppDispatch()
-    const edit = (editableNote: INote) => {
-        /* const editableIndex = array?.findIndex(el => el._id === editableNote._id)
-        const newArr = [...array || []]
-        if (editableIndex !== -1 && editableIndex !== undefined) newArr[editableIndex] = editableNote
-        dispatch(syncEditClient({
-            _id: clientId, fieldName: 'notes',
-            values: newArr
-        })) */
+
+    const edit = (editableNote: IActivity) => {
         dispatch(fetchEditNote(editableNote))
     }
+
     const deleteNote = (noteId: string) => {
         dispatch(fetchDeleteNote({noteId, clientId}))
     }
-    useEffect(() => {
-        if (!array) {
-            dispatch(fetchGetClientNotes(clientId))
-        }
-    }, [])
+
+    const setEditableNote = (note: IActivity) => {
+        setFormVisible(true)
+        setEditibleNoteItem(note)
+    }
 
     if (!fullName || !authorId) return null
 
@@ -72,29 +53,41 @@ const NotesArray: FC<INotesArrayProps> = ({ array, title, clientId }: INotesArra
 
     return (
         <div className={c.arrayWrapper}>
-            <AddNoteBtn array={array}
+            <AddActivityBtns areNoActivities={!array || !array.length} 
                 title={title}
                 setFormVisible={setFormVisible}
-                isFormVisible={isFormVisible} />
+                isFormVisible={isFormVisible}
+                setFormActivityType={setFormActivityType} />
 
-            {Boolean(array?.length) &&
-                <CurrentNote note={todoArray[currentItemIdx]} />}
+          {/*   {Boolean(array?.length) &&
+                <CurrentNote note={todoArray[currentItemIdx]} />} */}
 
             <div className={isFormVisible ? c.form : c.hiddenForm}>
-                <AddNoteForm array={array || []} fullName={fullName} authorId={authorId}
+                <AddNoteForm fullName={fullName} authorId={authorId}
                     clientId={clientId}
-                    setFormVisible={setFormVisible} />
+                    setFormVisible={setFormVisible}
+                    editibleNote={editibleNote}
+                    fetchEdit={edit}
+                    type={formActivityType} />
             </div>
 
             {!!todoArray.length &&
                 <div className={c.block}>
                     <h3>Предстоящие действия</h3>
-                    {todoArray.map((el, i) => <ActionsItem key={`${el._id}${i}` || `${el.createTimeStamp}${i}`}
+                    { todoArray.map((el, i) => {
+
+                        if (el.type === 'court' || el.type === 'meeting' ) {
+                            return <CurrentNote note={el} />
+                        }
+                        return <ActionsItem key={`${el._id}${i}` || `${el.createTimeStamp}${i}`}
                         note={el}
                         edit={edit}
                         deleteItem={() => deleteNote(el._id)}
                         hoveredLine={hoveredLine}
-                        setHoveredLine={setHoveredLine} />
+                        setHoveredLine={setHoveredLine} 
+                        setEditableNote={setEditableNote}
+                        />
+                    } 
                     )}
                 </div>
             }
@@ -114,6 +107,6 @@ const NotesArray: FC<INotesArrayProps> = ({ array, title, clientId }: INotesArra
     );
 };
 
-export default NotesArray;
+export default ActivityArray;
 
 

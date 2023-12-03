@@ -6,7 +6,8 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { IClient, SalesPhaseType } from "../../../types/clientsTypes";
 import { editClientOnClosePopup } from "../ClientsContainer";
 import { createModal } from "../../../utils/DialogCreator/DialogCreator";
-import EditClient from "../EditClient/EditClient";
+import EditClient from "../EditClient/Client";
+import { NavLink } from "react-router-dom";
 
 interface IClientLineProps {
     client: IClient
@@ -36,7 +37,9 @@ export const ClientLine: FC<IClientLineProps> = ({ client, salesphase }: IClient
     }
     
 
-    return <div className={c.wrap} id="clientLine" onClick={callEditClientPopup} >
+    return <>
+    <NavLink to={`/client/${client._id}`}> 
+    <div className={c.wrap} id="clientLine" /* onClick={callEditClientPopup} */ >
 
         <div className={c.flexLine}>
 
@@ -76,5 +79,7 @@ export const ClientLine: FC<IClientLineProps> = ({ client, salesphase }: IClient
 
         </div>
     </div>
+    </NavLink>
+    </>
 
 }

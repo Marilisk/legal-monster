@@ -4,8 +4,8 @@
     margin: 20px;
 }
 .flex {
-    display: flex;
-    align-items: center;
+    // display: flex;
+    // align-items: center;
     margin: 10px 0;
     //border: 1px solid darkblue;
 }
@@ -28,9 +28,10 @@
 }
 .variantsWrap {
     flex: 1;
-    //border: 1px solid green;
+    // border: 1px solid green;
     position: relative;
     padding: 6px;
+    margin-top: 10px;
 }
 
 .header {

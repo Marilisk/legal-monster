@@ -1,9 +1,8 @@
-import { IClient, ICreateClientPayload, INote } from './../types/clientsTypes';
+import { IActivity, IClient, ICreateClientPayload } from './../types/clientsTypes';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import instance from './api/api';
 import { LoadingStatusEnum } from '../types/userTypes';
 import { ClientsInitStateType } from '../types/clientsTypes';
-import { log } from 'console';
 
 
 export const fetchCreateClient = createAsyncThunk('clients/fetchCreateClient', async (params: ICreateClientPayload) => {
@@ -21,13 +20,13 @@ export const fetchDeleteClient = createAsyncThunk('clients/fetchDeleteClient', a
     return response.data;
 })
 
-export const fetchCreateNote = createAsyncThunk('clients/fetchCreateNote', async (params: INote) => {
+export const fetchCreateNote = createAsyncThunk('clients/fetchCreateNote', async (params: IActivity) => {
     let response = await instance.post('/notes/create', params);
     return response.data;
 })
-export const fetchEditNote = createAsyncThunk('clients/fetchEditNote', async (note: INote) => {
-    let response = await instance.post(`/notes/edit`, note);
-    return response.data;
+export const fetchEditNote = createAsyncThunk('clients/fetchEditNote', async (activity: IActivity) => {
+    let response = await instance.post(`/notes/edit`, activity);
+    return { data: response.data, activity };
 })
 
 export interface IDeleteNotePayload {
@@ -35,7 +34,7 @@ export interface IDeleteNotePayload {
     clientId: string
 }
 export const fetchDeleteNote = createAsyncThunk('clients/fetchDeleteNote', async ({ noteId, clientId }: IDeleteNotePayload) => {
-    let response = await instance.delete(`/notes/deletenote/${noteId}`);
+    let response = await instance.delete(`/notes/deletenote/${noteId}/${clientId}`);
     return { clientId, data: response.data }
 })
 
@@ -44,9 +43,9 @@ export const fetchGetClients = createAsyncThunk('clients/fetchGetClients', async
     return response.data;
 })
 
-export const fetchGetClientNotes = createAsyncThunk('clients/fetchGetClientNotes', async (clientId: string) => {
-    let response = await instance.get(`/notes/getbyclient/${clientId}`);
-    return { notes: response.data, clientId };
+export const fetchGetClientActivities = createAsyncThunk('clients/fetchGetClientActivities', async (clientId: string) => {
+    let response = await instance.get(`/activities/getbyclient/${clientId}`);
+    return { activities: response.data, clientId };
 })
 
 interface IEditStaffPayload {
@@ -57,7 +56,6 @@ interface IEditStaffPayload {
 export const fetchEditClientStaff = createAsyncThunk('clients/fetchEditClientStaff', async (
     { clientId, newValuesArr, staffName }: IEditStaffPayload) => {
     let response = await instance.patch(`/clients/staff/edit/${clientId}`, ({staffName, newValuesArr}));
-    console.log(response)
     return { staff: response.data, clientId, staffName };
 })
 
@@ -67,7 +65,7 @@ const initialState: ClientsInitStateType = {
         items: [],
         status: LoadingStatusEnum.loaded,
     },
-
+    loadedActivities: {},
     salesPipeline: [
         {
             stepNumber: 1,
@@ -124,17 +122,6 @@ const clientsSlice = createSlice({
                 state.showEditClientPopup.clientId = action.payload.id
             }
         },
-        /* setSalesPipeline(state, action) {
-            state.salesPipeline = action.payload
-        }, */
-        /*  deleteSalesPipelineItem(state, action) {
-             //state.salesPipeline = state.salesPipeline.filter((el, i) => i !== action.payload)
-             state.salesPipeline.splice(action.payload, 1)
-         },
-         savePipelineItem(state, action) {
-             const editibleItemIndex = state.salesPipeline.findIndex(el => el.stepNumber === action.payload.stepNumber)
-             state.salesPipeline[editibleItemIndex] = action.payload
-         }, */
         setClientsFilter(state, action: PayloadAction<{ property: 'excludedPhases' | 'period', values: any }>) {
             state.clientsFilters[action.payload.property] = action.payload.values
         },
@@ -232,20 +219,21 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.error;
             })
 
-            .addCase(fetchGetClientNotes.pending, (state) => {
+            .addCase(fetchGetClientActivities.pending, (state) => {
                 state.clients.status = LoadingStatusEnum.loading
             })
-            .addCase(fetchGetClientNotes.fulfilled, (state, action) => {
-                const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
-                if ((clientIndex || clientIndex === 0) && action.payload.notes.length) {
-                    state.clients.items[clientIndex].notes = action.payload.notes
+            .addCase(fetchGetClientActivities.fulfilled, (state, action) => {
+                state.loadedActivities[action.payload.clientId] = action.payload.activities
+                /* const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
+                if ((clientIndex || clientIndex === 0) && action.payload.activities) {
+                    state.clients.items[clientIndex].activities = action.payload.activities.not es
                 } else {
-                    state.clients.items[clientIndex].notes = []
-                }
+                    state.clients.items[clientIndex].activities = []
+                } */
                 state.clients.status = LoadingStatusEnum.loaded;
                 state.wasAnyClientFieldChangedFlag = false
             })
-            .addCase(fetchGetClientNotes.rejected, (state) => {
+            .addCase(fetchGetClientActivities.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;
                 state.wasAnyClientFieldChangedFlag = false
             })
@@ -256,7 +244,7 @@ const clientsSlice = createSlice({
             .addCase(fetchCreateNote.fulfilled, (state, action) => {
                 const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
                 if (clientIndex || clientIndex === 0) {
-                    state.clients.items[clientIndex].notes?.push(action.payload);
+                    state.clients.items[clientIndex].activities?.push(action.payload);
                     state.clients.status = LoadingStatusEnum.loaded;
                 }
                 state.wasAnyClientFieldChangedFlag = false
@@ -270,12 +258,12 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchEditNote.fulfilled, (state, action) => {
-                const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
+                const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.activity.clientId)
                 if (clientIndex || clientIndex === 0) {
                     const client = state.clients.items[clientIndex]
-                    const noteIndex = client.notes?.findIndex(note => note._id === action.payload._id)
-                    if ((noteIndex || noteIndex === 0) && client.notes) {
-                        client.notes[noteIndex] = action.payload
+                    const noteIndex = client.activities?.findIndex(a => a._id === action.payload.activity._id)
+                    if ((noteIndex || noteIndex === 0) && client.activities) {
+                        client.activities[noteIndex] = action.payload.activity
                     }
                     state.clients.status = LoadingStatusEnum.loaded;
                 }
@@ -292,8 +280,8 @@ const clientsSlice = createSlice({
             .addCase(fetchDeleteNote.fulfilled, (state, action) => {
                 const editableClientIndex = state.clients.items.findIndex(cl => cl._id === action.payload.clientId)
                 if (editableClientIndex || editableClientIndex === 0) {
-                    const clientNotes = state.clients.items[editableClientIndex].notes
-                    state.clients.items[editableClientIndex].notes = clientNotes?.filter(note => note._id === action.payload.data.noteId)
+                    const clientNotes = state.clients.items[editableClientIndex].activities
+                    state.clients.items[editableClientIndex].activities = clientNotes?.filter(a => a._id === action.payload.data.noteId)
                     state.clients.status = LoadingStatusEnum.loaded;
                 }
             })
@@ -304,34 +292,12 @@ const clientsSlice = createSlice({
 
 
 
-
-        /*  .addCase(fetchAddPipeline.pending, (state) => {
-             state.clients.status = LoadingStatusEnum.loading
-         })
-         .addCase(fetchAddPipeline.fulfilled, (state, action) => {
-             console.log(action.payload)
-             state.salesPipeline = action.payload.pipeline
-             state.clients.status = LoadingStatusEnum.loaded
-         })
-         .addCase(fetchAddPipeline.rejected, (state, action) => {
-             state.clients.status = LoadingStatusEnum.error;
-         }) */
-
-
-
-
-
     },
 
 });
 
 
 export const {
-    //setShowNewClientPopup,
-    //setShowEditClientPopup,
-    //setSalesPipeline,
-    /* deleteSalesPipelineItem,
-    savePipelineItem, */
     setClientsFilter,
     setOpenedFilter,
     syncEditClient,

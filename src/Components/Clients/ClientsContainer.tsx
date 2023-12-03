@@ -6,7 +6,7 @@ import { LoadingStatusEnum } from '../../types/userTypes';
 import { fetchGetMyStaff } from '../../redux/staffSlice';
 import { LoadingDotsPreloader } from '../../assets/LoadingDots/LoadingDotsPreloader';
 import { IClient } from '../../types/clientsTypes';
-import EditClient from './EditClient/EditClient';
+import EditClient from './EditClient/Client';
 import { createModal } from '../../utils/DialogCreator/DialogCreator';
 
 export const editClientOnClosePopup = async (client: IClient, dispatch: any) => {

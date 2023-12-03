@@ -15,7 +15,7 @@ export interface ICreateClientPayload {
         deadLine: number
         type: string
     }>
-    notes: INote[]
+    notes: IActivity[]
 }
 export interface IClient {
     _id: string
@@ -35,16 +35,18 @@ export interface IClient {
     }>
     creatorId: string
     ownerId: string
-    notes?: INote[]
+    activities?: IActivity[]
     updatedAt: string
     createdAt: string
 }
 
-export interface INote {
+export type ClientActivityType = 'note' | 'task' | 'meeting' | 'document' | 'court'
+export interface IActivity {
     author: {
         authorId: string
         fullName: string
     }
+    type: ClientActivityType
     createTimeStamp: number
     deadLine: number
     title?: string
@@ -53,6 +55,10 @@ export interface INote {
     isDone?: boolean
     _id: string
     clientId: string
+    result?: string
+    place?: string
+    startTS?: number,
+    endTS?: number,
 }
 
 export interface IContactPerson {
@@ -79,6 +85,7 @@ export type SalesPhaseType = {
 
 export type ClientsInitStateType = {
     clients: ClientsType
+    loadedActivities: {[key: string]: IActivity[]}
     salesPipeline: SalesPhaseType[]
     showNewClientPopup: boolean
     showEditClientPopup: {

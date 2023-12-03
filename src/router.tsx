@@ -7,6 +7,7 @@ import StaffContainer from './Components/Staff/StaffContainer';
 import LoginPage from './Components/LoginPage/LoginPage';
 import ClientsContainer from './Components/Clients/ClientsContainer';
 import SettingsContainer from './Components/Settings/SettingsContainer';
+import ClientPage from './Components/Clients/ClientPage';
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,11 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <ClientsContainer />,
+      },
+
+      {
+        path: "/client/:clientId",
+        element: <ClientPage />,
       },
 
       /* {

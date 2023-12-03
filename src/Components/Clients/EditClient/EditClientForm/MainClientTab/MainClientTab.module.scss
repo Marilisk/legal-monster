@@ -1,4 +1,4 @@
-@use './../../../../vars.scss' as *;
+
 
 
 .wrap {}
@@ -31,4 +31,8 @@
     //transform: scale(0);
     height: 0;
     opacity: 0;
+}
+
+.btnsContainer {
+    margin-top: 10px;
 }

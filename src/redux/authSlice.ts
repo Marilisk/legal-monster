@@ -29,7 +29,6 @@ interface IRegisterPayload extends IloginPayload {
 
 export const fetchRegister = createAsyncThunk('auth/fetchRegister', async (params: IRegisterPayload) => {
     let response = await instance.post('/auth/register', params);
-    console.log(response);
     localStorage.setItem('token', response.data.tokens.accessToken)
     return response.data;
 })

@@ -36,7 +36,7 @@ const Dialog = ({ component, onClose }: IDialogProps) => {
             rootEl?.remove()
         }
     }
-    console.log('in Dialog')
+    
     return <div className={c.backGround} onClick={(e) => handleClose(e)} >
         {
             isOpen && createPortal(

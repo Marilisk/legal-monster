@@ -21,22 +21,26 @@ export const ActionsItem: FC<IActionProps> = ({ note, edit, deleteItem, hoveredL
 
 
 
-    return <div className={note.isDone ? c.doneWrap : c.wrap} /* key={note._id} */
+    return <Paper sx={{ color: note.isDone ? '#C8CACA' : 'inherit' }} className={note.isDone ? c.doneWrap : c.wrap} /* key={note._id} */
         onMouseEnter={() => note._id && note._id !== hoveredLine && setHoveredLine(note._id)}
         onMouseLeave={() => setHoveredLine('')}
     >
         <div className={c.col}>{note.author.fullName}</div>
         <div className={c.titleCol}>
             <div>{note.title}</div>
-            <div>{note.text}</div>
+            {note.type !== 'note' &&
+                <div>{note.text}</div>
+            }
+
         </div>
-        <Card>
-            <CardContent>
+
+        <div className={c.col}>
+
             Результат:
             {note.result}
+        </div>
 
-            </CardContent>
-        </Card>
+
 
         <div className={c.col}>{brieflyformatDate(new Date(note.deadLine))}</div>
         <div className={c.doneCol}>
@@ -54,8 +58,8 @@ export const ActionsItem: FC<IActionProps> = ({ note, edit, deleteItem, hoveredL
             }
 
             <DeleteButton callBack={deleteItem} visible={hoveredLine === note._id} />
-            {setEditableNote && <button onClick={() => setEditableNote(note)} >редактировать</button> }
+            {setEditableNote && <button onClick={() => setEditableNote(note)} >редактировать</button>}
 
         </div>
-    </div>
+    </Paper>
 }

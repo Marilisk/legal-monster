@@ -20,7 +20,7 @@ interface ICreateFieldArrayProps {
 const  ContactsFieldArray =  ({ name, array, title, syncEdit, clientContactsLength }: ICreateFieldArrayProps) => {
 
     const [isBtnHovered, setIsBtnHovered] = useState<number | undefined>()
-
+    
     let wasAnythAdded = clientContactsLength === array.length
 
     return <div className={c.arrayWrapper}>

@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      dispatch(refreshAuth());
+      dispatch(refreshAuth()) // убираю с целью починить баг при заходе после долгого отсутствия
     }
   }, [dispatch]);
 
@@ -29,12 +29,12 @@ function App() {
     }
   }, [navigate, isAuth])
 
-  if (localStorage.getItem('token') && !isAuth) {
+  /* if (localStorage.getItem('token') && !isAuth) {
+    return <LoadingDotsPreloader />
+  }  */
+   if (isLoading) {
     return <LoadingDotsPreloader />
   } 
-  /* if (isLoading) {
-    return <LoadingDotsPreloader />
-  } */
 
   return <div >
     <Header isAuth={isAuth} />

@@ -31,7 +31,7 @@
 }
 
 .line {
-    display: flex;
+    // display: flex;
     padding: 10px;
     max-width: 100%;
     border-bottom: 1px solid $light-gray;
@@ -47,7 +47,7 @@
         cursor: pointer;
         border: 1px solid transparent;
         color: #666666;
-        width: 100px;
+        // width: 100px;
         &:focus {
             border: 1px solid $light-border-gray;
         }

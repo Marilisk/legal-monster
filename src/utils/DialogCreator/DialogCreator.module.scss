@@ -1,20 +1,20 @@
 @use './../../vars.scss' as *;
 
 .wrapper {
-    position: fixed;
+    position: absolute;
     background: white;
     top: 10vh;
     z-index: 1;
     border-radius: $commonBorderRadius;
     box-shadow: $popup-box-shadow;
-    overflow: hidden;
+    //overflow: hidden;
     min-height: 300px;
 }
 
 .backGround {
     position: absolute;
     background: $transparent-back;
-    height: 150vh;
+    height: 200vh;
     //height: 100%;
     width: 100vw;
     top: 0;
