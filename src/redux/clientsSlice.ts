@@ -43,6 +43,11 @@ export const fetchGetClients = createAsyncThunk('clients/fetchGetClients', async
     return response.data;
 })
 
+export const fetchGetOneClient = createAsyncThunk('clients/fetchGetOneClient', async (clientId:string) => {
+    let response = await instance.get(`/clients/getone/${clientId}`);
+    return response.data;
+})
+
 export const fetchGetClientActivities = createAsyncThunk('clients/fetchGetClientActivities', async (clientId: string) => {
     let response = await instance.get(`/activities/getbyclient/${clientId}`);
     return { activities: response.data, clientId };
@@ -129,7 +134,6 @@ const clientsSlice = createSlice({
             state.openedFilter = action.payload
         },
         syncEditClient(state, action: PayloadAction<{ _id: string, values: any, fieldName: string }>) {
-            //console.log('syncEditClient payload', action.payload)
             const editibleIdx = state.clients.items.findIndex(cl => cl._id === action.payload._id)
             if (editibleIdx >= 0) {
                 state.clients.items[editibleIdx][action.payload.fieldName as keyof IClient] = action.payload.values
@@ -152,11 +156,6 @@ const clientsSlice = createSlice({
             })
             .addCase(fetchCreateClient.rejected, (state, action) => {
                 state.clients.status = LoadingStatusEnum.error;
-                /* if (action.error.message === 'Request failed with status code 400') {
-                    state.clients.serverMessage = 'неверный логин или пароль';
-                } else {
-                    state.clients.serverMessage = 'сервис недоступен';
-                } */
             })
 
 
@@ -164,11 +163,22 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchGetClients.fulfilled, (state, action) => {
-                //console.log('fetchGetClients', action.payload)
                 state.clients.status = LoadingStatusEnum.loaded;
                 state.clients.items = action.payload;
             })
-            .addCase(fetchGetClients.rejected, (state, action) => {
+            .addCase(fetchGetClients.rejected, (state) => {
+                state.clients.status = LoadingStatusEnum.error;
+            })
+
+            .addCase(fetchGetOneClient.pending, (state) => {
+                state.clients.status = LoadingStatusEnum.loading
+            })
+            .addCase(fetchGetOneClient.fulfilled, (state, action) => {
+                console.log('fetchGetOneClient', action.payload)
+                state.clients.status = LoadingStatusEnum.loaded;
+                state.clients.items = [...state.clients.items, ...action.payload ]
+            })
+            .addCase(fetchGetOneClient.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;
             })
 
@@ -242,12 +252,9 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchCreateNote.fulfilled, (state, action) => {
-                const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
-                if (clientIndex || clientIndex === 0) {
-                    state.clients.items[clientIndex].activities?.push(action.payload);
-                    state.clients.status = LoadingStatusEnum.loaded;
-                }
+                state.loadedActivities[action.payload.clientId].push(action.payload)
                 state.wasAnyClientFieldChangedFlag = false
+                state.clients.status = LoadingStatusEnum.loaded
             })
             .addCase(fetchCreateNote.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;
@@ -258,16 +265,13 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchEditNote.fulfilled, (state, action) => {
-                const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.activity.clientId)
-                if (clientIndex || clientIndex === 0) {
-                    const client = state.clients.items[clientIndex]
-                    const noteIndex = client.activities?.findIndex(a => a._id === action.payload.activity._id)
-                    if ((noteIndex || noteIndex === 0) && client.activities) {
-                        client.activities[noteIndex] = action.payload.activity
-                    }
-                    state.clients.status = LoadingStatusEnum.loaded;
+                const editibleActivities = state.loadedActivities[action.payload.activity.clientId]
+                const editibleItemInd = editibleActivities.findIndex(act => act._id === action.payload.activity._id )
+                if (editibleItemInd || editibleItemInd === 0) {
+                    editibleActivities[editibleItemInd] = action.payload.activity
                 }
                 state.wasAnyClientFieldChangedFlag = false
+                state.clients.status = LoadingStatusEnum.loaded
             })
             .addCase(fetchEditNote.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;
@@ -278,12 +282,8 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchDeleteNote.fulfilled, (state, action) => {
-                const editableClientIndex = state.clients.items.findIndex(cl => cl._id === action.payload.clientId)
-                if (editableClientIndex || editableClientIndex === 0) {
-                    const clientNotes = state.clients.items[editableClientIndex].activities
-                    state.clients.items[editableClientIndex].activities = clientNotes?.filter(a => a._id === action.payload.data.noteId)
-                    state.clients.status = LoadingStatusEnum.loaded;
-                }
+                state.loadedActivities[action.payload.clientId] = state.loadedActivities[action.payload.clientId]
+                    .filter(act => act._id !== action.payload.data.noteId )
             })
             .addCase(fetchDeleteNote.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;

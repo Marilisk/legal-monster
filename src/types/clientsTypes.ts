@@ -35,7 +35,7 @@ export interface IClient {
     }>
     creatorId: string
     ownerId: string
-    activities?: IActivity[]
+    activities?: string[]
     updatedAt: string
     createdAt: string
 }
@@ -58,7 +58,8 @@ export interface IActivity {
     result?: string
     place?: string
     startTS?: number,
-    endTS?: number,
+    createdAt: string
+    // endTS?: number,
 }
 
 export interface IContactPerson {

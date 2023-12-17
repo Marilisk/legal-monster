@@ -79,11 +79,12 @@ export const AddEventForm: FC<IAddEventForm> = ({ handleCloseForm, startDate, po
                 <Form >
 
                     <PopupHeader title={editMode ? 'Изменить мероприятие' : 'Новое событие'}
-                        handleClose={() => {
+                        /* handleClose={() => {
                             props.handleReset()
                             handleCloseForm('addEvent') // can i remove this? guess no...
                             dispatch(setEventToForm(null))
-                        }} />
+                        }}  */
+                        />
 
                     <div className={c.formBodyWrap}>
 

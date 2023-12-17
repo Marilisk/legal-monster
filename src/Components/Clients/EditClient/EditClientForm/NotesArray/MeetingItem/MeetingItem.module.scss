@@ -1,37 +1,55 @@
 @use './../../../../../../vars.scss' as *;
 
-.currentItem {
-    border: $thin-gray-border;
-    border-radius: $commonBorderRadius;
 
-    div:not(.currentFields) {
-        //margin: 10px 30px;
-    }
+.header {
+    border: 1px solid transparent;
+
 }
+
 .currentTitle {
     font-weight: 800;
     margin: 10px 30px;
+    display: flex;
+    // align-items: center;
+    justify-content: space-between;
+    & span {
+        margin-left: 10px;
+    }
+
+    ;
 }
+
+.titleHead {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    // border: 1px solid orange;
+
+}
+
 .currentText {
     color: $light-fontcolor;
     margin: 10px 30px;
 }
+
 .currentFields {
     display: flex;
     align-items: stretch;
     //justify-content: space-around;
     border-top: 1px solid $light-border-gray;
-    //border: 1px solid red;
     padding: 0;
-    & > div {
+
+    &>div {
         border-right: 1px solid $light-border-gray;
         flex: 1;
         padding: 10px;
+
         &:last-child {
             border: none;
         }
     }
 }
+
 .name {
     color: $light-fontcolor;
 }
@@ -39,7 +57,8 @@
 .part {
     display: flex;
     align-items: center;
-    & > div {
+
+    &>div {
         margin-right: 10px;
     }
 }

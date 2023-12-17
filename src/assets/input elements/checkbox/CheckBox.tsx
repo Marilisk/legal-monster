@@ -5,6 +5,10 @@ import c from './CheckBox.module.scss';
 interface ICheckBoxProps {
     //value: boolean
     callback: (e: React.ChangeEvent<HTMLInputElement>) => void
+    /**
+     * @name of input
+     * 
+     */
     name?: string
     checked?: boolean
 }

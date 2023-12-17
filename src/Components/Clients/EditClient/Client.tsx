@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import c from './Client.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LoadingStatusEnum } from '../../../types/userTypes';
@@ -6,9 +6,10 @@ import PopupHeader from '../../../assets/popupHeader/PopupHeader';
 import ContactsPresenter from '../../../assets/ContactsPresenter/ContactsPresenter';
 import InfoPart from './EditClientForm/InfoPart/InfoPart';
 import { Tabs } from '../../../assets/Tabs/Tabs';
-import { fetchDeleteClient } from '../../../redux/clientsSlice';
+import { fetchDeleteClient, fetchGetOneClient } from '../../../redux/clientsSlice';
 import MainClientTab from './EditClientForm/MainClientTab/MainClientTab';
 import ClientCasesTab from './EditClientForm/ClientCasesTab/ClientCasesTab';
+import { LoadingDotsPreloader } from '../../../assets/LoadingDots/LoadingDotsPreloader';
 
 interface IClientProps {
     clientId: string
@@ -18,10 +19,16 @@ const Client: FC<IClientProps> = ({ clientId }: IClientProps) => {
 
     const dispatch = useAppDispatch()
 
-    //const clientId = useAppSelector(s => s.clients.showEditClientPopup.clientId)
     const client = useAppSelector(s => s.clients.clients.items.find(c => c._id === clientId))
     const isLoading = useAppSelector(s => s.clients.clients.status === LoadingStatusEnum.loading)
 
+    useEffect(() => {
+        if (!client) {
+            dispatch(fetchGetOneClient(clientId))
+        }
+    }, [clientId])
+
+    if (isLoading) return <LoadingDotsPreloader />
     if (!client) {
         return <div>NO client</div>
     }

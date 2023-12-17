@@ -2,12 +2,13 @@ import { FC, useEffect, useState } from 'react';
 import c from './ActivityArray.module.scss'
 import { ClientActivityType, IActivity } from '../../../../../types/clientsTypes';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import CurrentNote from './CurrentNote/CurrentNote';
+import MeetingItem from './MeetingItem/MeetingItem';
 import AddNoteForm from './AddNoteForm/AddNoteForm';
 import { NoBorderButton } from '../../../../../assets/input elements/NoBorderButton/NoBorderButton';
 import { ActionsItem } from './LastActionItem/ActionItem';
 import { fetchDeleteNote, fetchEditNote, syncEditClient } from '../../../../../redux/clientsSlice';
 import AddActivityBtns from './AddActivityBtns/AddActivityBtns';
+import { Divider, Typography } from '@mui/material';
 
 interface IActivityArrayProps {
     array: IActivity[] | undefined
@@ -25,8 +26,8 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
     const [editibleNote, setEditibleNoteItem] = useState<IActivity | undefined>()
     const [hoveredLine, setHoveredLine] = useState('')
 
-    const [formActivityType, setFormActivityType] = useState<ClientActivityType>()
-    
+    const [formActivityType, setFormActivityType] = useState<ClientActivityType>('note')
+
     const dispatch = useAppDispatch()
 
     const edit = (editableNote: IActivity) => {
@@ -34,13 +35,15 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
     }
 
     const deleteNote = (noteId: string) => {
-        dispatch(fetchDeleteNote({noteId, clientId}))
+        dispatch(fetchDeleteNote({ noteId, clientId }))
     }
 
     const setEditableNote = (note: IActivity) => {
         setFormVisible(true)
         setEditibleNoteItem(note)
     }
+
+    // console.log('editibleNote', editibleNote)
 
     if (!fullName || !authorId) return null
 
@@ -53,13 +56,13 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
 
     return (
         <div className={c.arrayWrapper}>
-            <AddActivityBtns areNoActivities={!array || !array.length} 
+            <AddActivityBtns areNoActivities={!array || !array.length}
                 title={title}
                 setFormVisible={setFormVisible}
                 isFormVisible={isFormVisible}
                 setFormActivityType={setFormActivityType} />
 
-          {/*   {Boolean(array?.length) &&
+            {/*   {Boolean(array?.length) &&
                 <CurrentNote note={todoArray[currentItemIdx]} />} */}
 
             <div className={isFormVisible ? c.form : c.hiddenForm}>
@@ -72,29 +75,39 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
             </div>
 
             {!!todoArray.length &&
-                <div className={c.block}>
-                    <h3>Предстоящие действия</h3>
-                    { todoArray.map((el, i) => {
+                <div className={c.block} >
+                    
+                    <Typography variant='h2'>Предстоящие действия</Typography>
 
-                        if (el.type === 'court' || el.type === 'meeting' ) {
-                            return <CurrentNote note={el} />
+                    {todoArray.map((el, i) => {
+
+                        if (el.type === 'court' || el.type === 'meeting') {
+                            return <MeetingItem key={`${el._id}${i}-m`}
+                                note={el}
+                                edit={edit}
+                                deleteItem={() => deleteNote(el._id)}
+                                hoveredLine={hoveredLine}
+                                setHoveredLine={setHoveredLine}
+                                setEditableNote={setEditableNote}
+                            />
                         }
                         return <ActionsItem key={`${el._id}${i}` || `${el.createTimeStamp}${i}`}
-                        note={el}
-                        edit={edit}
-                        deleteItem={() => deleteNote(el._id)}
-                        hoveredLine={hoveredLine}
-                        setHoveredLine={setHoveredLine} 
-                        setEditableNote={setEditableNote}
+                            note={el}
+                            edit={edit}
+                            deleteItem={() => deleteNote(el._id)}
+                            hoveredLine={hoveredLine}
+                            setHoveredLine={setHoveredLine}
+                            setEditableNote={setEditableNote}
                         />
-                    } 
+                    }
                     )}
                 </div>
             }
 
             {!!doneArray.length &&
                 <div className={c.block}>
-                    <h3>Завершённые действия</h3>
+                    <Divider />
+                    <Typography variant='h2'>Завершённые действия</Typography>
                     {doneArray.map((el, i) => <ActionsItem key={`${el._id}${i}` || `${el.createTimeStamp}${i}`}
                         note={el} edit={edit}
                         deleteItem={() => deleteNote(el._id)}

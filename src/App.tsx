@@ -12,27 +12,32 @@ function App() {
 
   const dispatch = useAppDispatch()
   const isAuth = useAppSelector(selectIsAuth)
-  const isLoading = useAppSelector(s => s.auth.loginData.status === LoadingStatusEnum.loading)
+  const authLoadingStatus = useAppSelector(s => s.auth.loginData.status)
   const navigate = useNavigate()
-  //console.log('isAuth', isAuth)
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      dispatch(refreshAuth()) // убираю с целью починить баг при заходе после долгого отсутствия
+      dispatch(refreshAuth()) 
     }
-  }, [dispatch]);
+  }, [ dispatch ]);
 
   useEffect(() => {
-    //if (!isPipelineCustom) dispatch(setSalesPipeline(defaultPipeline))
-    if (!isAuth /* && !document.cookie !localStorage.getItem('token') */) {
+    if (!isAuth && !localStorage.getItem('token')   ) {
       navigate('/login')
     }
-  }, [navigate, isAuth])
+  }, [navigate, isAuth, authLoadingStatus])
 
-  /* if (localStorage.getItem('token') && !isAuth) {
+  useEffect(() => {
+    if (authLoadingStatus === LoadingStatusEnum.error && localStorage.getItem('token')   ) {
+      localStorage.removeItem('token')
+      navigate('/login')
+    }
+  }, [navigate, isAuth, authLoadingStatus])
+
+  if (localStorage.getItem('token') && !isAuth) {
     return <LoadingDotsPreloader />
-  }  */
-   if (isLoading) {
+  } 
+   if (authLoadingStatus === LoadingStatusEnum.loading) {
     return <LoadingDotsPreloader />
   } 
 

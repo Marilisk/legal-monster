@@ -25,10 +25,14 @@
 .box, .hidden, .btnBox {
     box-shadow: 2px 2px 19px 4px rgba(152, 179, 174, .3);
     position: absolute;
-    //top: -6px;
     transition: 100ms linear;
     z-index: 1;
     background: white;
+}
+.titleBox {
+    border-bottom: 1px solid $light-border-gray;
+    text-transform: capitalize;
+    text-align: center;
 }
 
 .flex {

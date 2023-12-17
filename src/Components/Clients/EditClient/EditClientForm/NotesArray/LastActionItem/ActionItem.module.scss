@@ -25,7 +25,14 @@
 }
 
 .titleCol {
+    display: inline-block;
     flex: 3;
+    // background-color: red;
+    &>div:first-child {
+        display: flex;
+        align-items: center;
+        // border: 1px solid darkblue;
+    }
 }
 
 .doneWrap {

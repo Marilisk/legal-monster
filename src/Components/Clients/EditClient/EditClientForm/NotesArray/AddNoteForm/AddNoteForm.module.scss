@@ -34,6 +34,8 @@
 
 .lineWrap {
     position: relative;
+    display: flex;
+    align-items: center;
     //width: 100%;
     .label {
         width: 100%;
@@ -45,5 +47,11 @@
         }
     }
    
+}
+
+
+.pickerWrap {
+    // border: $test-border;
+    width: fit-content;
 }
 

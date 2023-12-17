@@ -30,7 +30,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#36403E',
-      disabled: '#C8CACA',
+      disabled: '#7C7D7D',
     },
     grey: {
       100: '#ececec',
@@ -66,23 +66,23 @@ const theme = createTheme({
         {
           props: { variant: 'h2' },
           style: {
-            // fontFamily: ['Stapel', 'sans-serif', ].join(','),
             fontSize: 28,
             fontWeight: 500,
+            marginBottom: 10,
           }
         },
         {
           props: { variant: 'h3' },
           style: {
-            // fontFamily: ['Stapel', 'sans-serif', ].join(','),
             fontSize: 18,
-            fontWeight: 400,
+            fontWeight: 700,
+            // marginBottom: 10,
+
           }
         },
         {
           props: { variant: 'h4' },
           style: {
-            // fontFamily: ['Stapel', 'sans-serif', ].join(','),
             fontSize: 16,
           }
         },
@@ -118,6 +118,18 @@ const theme = createTheme({
           borderRadius: '8px',
           // background: '',
           // boxShadow: '0 0 5px rgba(0, 0, 0, 0.25)',
+        }, 
+      },
+    },
+    MuiDivider: {
+      defaultProps: {
+        
+      },
+      styleOverrides: {
+         root: {
+          borderColor: '#E1E9F2',
+          marginBottom: '20px',
+          marginTop: '20px',
         }, 
       },
     },

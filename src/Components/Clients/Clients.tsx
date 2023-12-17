@@ -33,7 +33,7 @@ export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEd
     console.log(testArr.sort((a, b) => a - b)) */
 
     const pipelineState = useAppSelector(s => s.auth.loginData.data?.ownerSettings.salesPipeline)
-    const defaultPipeline = useAppSelector(s => s.clients.salesPipeline) 
+    const defaultPipeline = useAppSelector(s => s.clients.salesPipeline)
     let salesPipeline = pipelineState?.isCustom ? pipelineState.pipeline : defaultPipeline
     const openedFilter = useAppSelector(s => s.clients.openedFilter)
     const handleSelectFilter = (e: React.MouseEvent) => {
@@ -51,7 +51,7 @@ export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEd
 
         <div className={c.header}>
             <Button type="button">
-                <div onClick={() => createModal({component: <NewClient /> }) }
+                <div onClick={() => createModal({ component: <NewClient /> })}
                     id="newClientBtn" >
                     новый клиент
                 </div>
@@ -79,7 +79,7 @@ export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEd
                     })}
                 </div>
 
-                { !clients.length && <div>Пока нет клиентов</div> }
+                {!clients.length && <div>Пока нет клиентов</div>}
 
             </div>
         </div>

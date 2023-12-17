@@ -64,7 +64,7 @@ const ClientsContainer = () => {
             dispatch(fetchGetMyStaff('manager'))
             dispatch(fetchGetMyStaff('lawyer'))
         }
-    }, [dispatch, isOwner, canChangeResponsibleUser])
+    }, [isOwner, canChangeResponsibleUser])
 
     if (isLoading ) {
         return <div>clients container loading</div>
