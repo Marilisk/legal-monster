@@ -6,11 +6,9 @@ import FormTextField from '../../../../assets/input elements/formTextField/FormT
 import { Button } from '../../../../assets/input elements/button/Button';
 import c from './NewClientForm.module.scss'
 import impc from './../../../../assets/input elements/formTextField/FormTextField.module.scss'
-import PopupHeader from '../../../../assets/popupHeader/PopupHeader';
 import { basicLengthValidate, flInnValidate, ulInnValidate } from '../../../Calendar/AddEventForm/validateForm';
 import { fetchCreateClient } from '../../../../redux/clientsSlice';
 import InputMask from 'react-input-mask';
-import { SalesPhaseType } from '../../../../types/clientsTypes';
 import PipeLineSelector from '../../EditClient/EditClientForm/PipeLineSelector/PipeLineSelector';
 
 
@@ -67,12 +65,6 @@ export const NewClientForm: FC<INewClientFromProps> = ({ }: INewClientFromProps)
 
             {props => (
                 <Form >
-
-                    <PopupHeader title={'Новый клиент'}
-                        handleClose={() => {
-                            //setShowNewClientPopup(false)
-                        }} />
-
                     <div className={c.formBodyWrap}>
 
                         <RadioBtnsGroup values={['юридическое лицо', 'индивидуальный предприниматель', 'физическое лицо']}

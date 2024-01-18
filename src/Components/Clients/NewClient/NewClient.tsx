@@ -1,19 +1,19 @@
 import { FC } from "react";
 import { NewClientForm } from './NewClientForm/NewClientForm';
-import c from './NewClient.module.scss'
-import { SalesPhaseType } from "../../../types/clientsTypes";
+import PopupWrapper from "../../../assets/PopupWrapper/PopupWrapper";
 
 interface INewClientProps {
-    //setShowNewClientPopup: (arg: boolean) => void
+
 
 }
-const NewClient: FC<INewClientProps> = ({ /* setShowNewClientPopup */ }:INewClientProps) => {
-  
+const NewClient: FC<INewClientProps> = ({ }: INewClientProps) => {
 
-    return <div className={c.wrap} id="newClientPopup">
-        <NewClientForm /* setShowNewClientPopup={setShowNewClientPopup} */ />
 
-    </div>
+    return (
+        <PopupWrapper title={'Новый клиент'} >
+            <NewClientForm />
+        </PopupWrapper>
+    )
 }
 
 export default NewClient;

@@ -1,6 +1,7 @@
 import { FC } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from "@mui/material";
+import withConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 
 export interface IButtonProps {
     callBack?: () => void
@@ -17,15 +18,21 @@ export const appearingBtnStyles = (visible: boolean) => {
     }
 }
 
-export const DeleteButton: FC<IButtonProps> = ({ 
-    callBack, disabled = false, visible = true, color = undefined 
+export const DeleteButton: FC<IButtonProps> = ({
+    callBack, disabled = false, visible = true, color = undefined
 }: IButtonProps) => {
 
     return <IconButton size="medium"
         sx={() => appearingBtnStyles(visible)}
         disabled={disabled}
         type='button'
-        onClick={callBack} >
+        onClick={() => {
+            // console.log('in IconButton !')
+            callBack && callBack()
+
+        }} >
         <DeleteIcon />
     </IconButton>
 }
+
+export const DeleteButtonWithConfirm = withConfirmDialog(DeleteButton)

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import PopupHeader from '../../../../assets/popupHeader/PopupHeader';
+import PopupHeader from '../../../../assets/PopupWrapper/PopupWrapper';
 import c from './EditClientForm.module.scss'
 import { IClient } from '../../../../types/clientsTypes';
 import { fetchDeleteClient, fetchEditClient, setWasAnyClientFieldChangedFlag } from '../../../../redux/clientsSlice';

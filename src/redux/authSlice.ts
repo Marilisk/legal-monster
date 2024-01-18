@@ -139,6 +139,7 @@ const authSlice = createSlice({
 });
 
 export const selectIsAuth = (state: RootState) => Boolean(state.auth.loginData.data);
+export const selectIsOwner = (state: RootState) => Boolean(state.auth.loginData.data?.role === 'owner');
 //export const selectIsManager = (state: RootState) => Boolean(state.auth.loginData.data?.role === 'ADMIN');
 
 

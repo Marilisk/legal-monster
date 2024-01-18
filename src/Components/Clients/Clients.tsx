@@ -4,10 +4,8 @@ import { ClientLine } from "./ClientLine/ClientLine";
 import c from './Clients.module.scss';
 import { Button } from "../../assets/input elements/button/Button";
 import { TableHeader } from "./TableHeader/TableHeader";
-import { createPortal } from "react-dom";
 import NewClient from "./NewClient/NewClient";
 import { setOpenedFilter } from "../../redux/clientsSlice";
-import EditClient from "./EditClient/Client";
 import { IClient, SalesPhaseType } from "../../types/clientsTypes";
 import { filterClients } from "./functions/filter";
 import { createModal } from "../../utils/DialogCreator/DialogCreator";
@@ -50,11 +48,8 @@ export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEd
         onClick={handleSelectFilter} >
 
         <div className={c.header}>
-            <Button type="button">
-                <div onClick={() => createModal({ component: <NewClient /> })}
-                    id="newClientBtn" >
-                    новый клиент
-                </div>
+            <Button callBack={() => createModal({ component: <NewClient /> })} >
+                новый клиент
             </Button>
 
             <div>

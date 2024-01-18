@@ -9,9 +9,8 @@ import { IClient } from '../../types/clientsTypes';
 import EditClient from './EditClient/Client';
 import { createModal } from '../../utils/DialogCreator/DialogCreator';
 
-export const editClientOnClosePopup = async (client: IClient, dispatch: any) => {
+ const editClientOnClosePopup = async (client: IClient, dispatch: any) => {
     const response = await dispatch(fetchEditClient(client))
-    console.log('resp close on click outside', response)
     if (response.meta.requestStatus === 'fulfilled') {
         //dispatch(setShowEditClientPopup({ isOpened: false, id: '' }))
         dispatch(setWasAnyClientFieldChangedFlag(false))
@@ -36,7 +35,7 @@ const ClientsContainer = () => {
 
     const canSeeOtherClients = useAppSelector(s => s.auth.loginData.data?.powers.canSeeOtherClients)
 
-    const handleClientsPageClick = useCallback((e: Event): void => {
+    /* const handleClientsPageClick = useCallback((e: Event): void => {
         let id
         const element = (e.target as HTMLElement).closest('[id]') as HTMLElement
         if (element) { id = element.id }
@@ -56,7 +55,7 @@ const ClientsContainer = () => {
     useEffect(() => {
         document.addEventListener('click', handleClientsPageClick)
         return () => document.removeEventListener('click', handleClientsPageClick)
-    }, [handleClientsPageClick])
+    }, [handleClientsPageClick]) */
 
     useEffect(() => {
         dispatch(fetchGetClients())

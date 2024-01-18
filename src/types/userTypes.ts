@@ -22,6 +22,7 @@ export interface IUser {
         canEditSalesPipeline: boolean
         canDeleteNotes: boolean
         canDeleteClients: boolean
+        canEditCompletedActions?: boolean
     }
     ownerId?: string
     isActivated: boolean

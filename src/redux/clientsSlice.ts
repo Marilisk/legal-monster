@@ -147,7 +147,7 @@ const clientsSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchCreateClient.pending, (state, action/* :PayloadAction<string[]> */) => {
+        builder.addCase(fetchCreateClient.pending, (state) => {
             state.clients.status = LoadingStatusEnum.loading
         })
             .addCase(fetchCreateClient.fulfilled, (state, action) => {
@@ -174,7 +174,6 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchGetOneClient.fulfilled, (state, action) => {
-                console.log('fetchGetOneClient', action.payload)
                 state.clients.status = LoadingStatusEnum.loaded;
                 state.clients.items = [...state.clients.items, ...action.payload ]
             })
@@ -214,7 +213,6 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.error;
                 state.wasAnyClientFieldChangedFlag = false
             })
-
 
             .addCase(fetchDeleteClient.pending, (state) => {
                 state.clients.status = LoadingStatusEnum.loading
@@ -284,6 +282,8 @@ const clientsSlice = createSlice({
             .addCase(fetchDeleteNote.fulfilled, (state, action) => {
                 state.loadedActivities[action.payload.clientId] = state.loadedActivities[action.payload.clientId]
                     .filter(act => act._id !== action.payload.data.noteId )
+                state.clients.status = LoadingStatusEnum.loaded
+
             })
             .addCase(fetchDeleteNote.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;

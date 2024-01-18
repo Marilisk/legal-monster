@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react'
 import c from './Client.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LoadingStatusEnum } from '../../../types/userTypes';
-import PopupHeader from '../../../assets/popupHeader/PopupHeader';
+import PopupHeader from '../../../assets/PopupWrapper/PopupWrapper';
 import ContactsPresenter from '../../../assets/ContactsPresenter/ContactsPresenter';
 import InfoPart from './EditClientForm/InfoPart/InfoPart';
 import { Tabs } from '../../../assets/Tabs/Tabs';

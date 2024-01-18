@@ -4,7 +4,7 @@ import c from './ActionItem.module.scss'
 import { DoneTask } from "../../../../../../assets/Icons/DoneTask"
 import { NoBorderButton } from "../../../../../../assets/input elements/NoBorderButton/NoBorderButton"
 import { brieflyformatDate, smartFormatDate } from "../../../../../../assets/functions/formatDate"
-import { DeleteButton } from "../../../../../../assets/input elements/DeleteButton/DeleteButton"
+import { DeleteButton, DeleteButtonWithConfirm } from "../../../../../../assets/input elements/DeleteButton/DeleteButton"
 import { Card, CardContent, Divider, Paper, Typography, hexToRgb } from "@mui/material"
 import EditButton from "../../../../../../assets/input elements/EditButton/EditButton"
 import { useGetActivityTitleFromType } from "../getPriorityText"
@@ -26,8 +26,8 @@ export const ActionsItem: FC<IActionProps> = ({
 
     const assets = useGetActivityTitleFromType(note.type)
 
-    console.log('******************note.createdAt', note.createdAt)
-    console.log(new Date(Date.parse(note.createdAt)))
+    /* console.log('******************note.createdAt', note.createdAt)
+    console.log(new Date(Date.parse(note.createdAt))) */
 
     return <Paper sx={{ color: note.isDone ? '#7C7D7D' : 'inherit', mb: 2, background: assets.bgColor }} className={note.isDone ? c.doneWrap : c.wrap}
         onMouseEnter={() => note._id && note._id !== hoveredLine && setHoveredLine(note._id)}
@@ -53,7 +53,14 @@ export const ActionsItem: FC<IActionProps> = ({
                 <div className={c.doneCol}>
 
 
-                    <DeleteButton callBack={deleteItem} visible={hoveredLine === note._id} />
+                    {/* <DeleteButton callBack={deleteItem} visible={hoveredLine === note._id} /> */}
+                    
+                    <DeleteButtonWithConfirm callBack={deleteItem} visible={hoveredLine === note._id}
+                        confirmBtnText="точно?"
+                        confirmTitle="точно удалить?"
+
+                    />
+                    
 
                     {
                         setEditableNote &&
@@ -88,9 +95,8 @@ export const ActionsItem: FC<IActionProps> = ({
                 </div> */}
                 <Result
                     result={note.result}
-                    checkIsDone={() => edit({ ...note, isDone: true }) }
                     isDone={note.isDone}
-                    editResult={(v) => edit({ ...note, result: v  }) }
+                    editResult={(v) => edit({ ...note, isDone: true, result: v  }) }
                         
                 />
                 </>

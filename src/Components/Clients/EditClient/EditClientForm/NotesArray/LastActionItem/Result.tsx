@@ -1,49 +1,61 @@
 import { Divider, Typography } from '@mui/material'
 import { FC, useState } from 'react'
 import c from './ActionItem.module.scss'
-
-import { DoneTask } from "../../../../../../assets/Icons/DoneTask"
-import { NoBorderButton } from '../../../../../../assets/input elements/NoBorderButton/NoBorderButton'
-import { DoneIcon } from '../../../../../../assets/Icons/DoneIcon'
-import FormTextField from '../../../../../../assets/input elements/formTextField/FormTextField'
+import TextField from '../../../../../../assets/input elements/TextField/TextField'
+import DoneButton from '../../../../../../assets/input elements/DoneButton/DoneButton'
+import { useAppSelector } from '../../../../../../redux/hooks'
+import { selectIsOwner } from '../../../../../../redux/authSlice'
 
 interface IProps {
     result?: string
     isDone?: boolean
-    checkIsDone: () => void
     editResult: (v: string) => void
 }
 
-const Result: FC<IProps> = ({ result, isDone, checkIsDone }) => {
+const Result: FC<IProps> = ({ result, isDone, editResult }) => {
 
     const [text, setText] = useState('')
 
+    // todo сделать настройку разрешать ли изменять завершенные события рядовым пользователям
+    const isOwner = useAppSelector(selectIsOwner)
+    const canEditCompletedActions = useAppSelector(s => s.auth.loginData.data?.powers.canEditCompletedActions)
 
+    const canEditDoneResult = isDone || isOwner || canEditCompletedActions
 
     return (
-        <div /* className={c.col} */>
-            
-            <Typography variant="subtitle2">Результат:</Typography>
+        <div className={c.result}>
+            <Divider />
 
-            <FormTextField 
-                value={text}
-                name='addResult'
-                
-                />
-
-            {result}
-                {
-                    !isDone ?
+            {result?.length ?
+                <div>
+                    <Typography variant='h6'>Результат: </Typography>
+                    <div>
+                        <Typography>{result}</Typography>
+                    </div>
+                </div>
+                :
+                <>
+                    {
+                        canEditDoneResult &&
                         <>
-                        <DoneIcon />
-                            <NoBorderButton type="button" small
-                                callBack={checkIsDone} >
-                                <div>отметить выполненным</div>
-                            </NoBorderButton>
+                            <TextField
+                                value={text}
+                                label='Результат'
+                                onChange={setText}
+                            />
+                            <div>
+                                <DoneButton
+                                    tooltipText='записать результат и отметить действие выполненным'
+                                    callBack={() => editResult(text)}
+                                    // confirmQuestion='вы уверены, что хотите отметить действие выполненным?'
+                                />
+                            </div>
                         </>
-                        :
-                        <DoneTask />
-                }
+                    }
+                </>
+
+            }
+
         </div>
     )
 }

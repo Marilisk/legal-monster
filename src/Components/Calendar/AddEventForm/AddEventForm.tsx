@@ -10,7 +10,7 @@ import { IFormPopup, addTask, callDatePickerPopUp, editTask, setEventToForm, } f
 import FormTextField from "../../../assets/input elements/formTextField/FormTextField";
 import { basicLengthValidate } from "./validateForm";
 import { getInitialValues } from "./getInitialValues";
-import PopupHeader from "../../../assets/popupHeader/PopupHeader";
+import PopupHeader from "../../../assets/PopupWrapper/PopupWrapper";
 
 
 interface IAddEventForm {

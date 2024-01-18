@@ -76,8 +76,6 @@ const theme = createTheme({
           style: {
             fontSize: 18,
             fontWeight: 700,
-            // marginBottom: 10,
-
           }
         },
         {
@@ -89,7 +87,8 @@ const theme = createTheme({
         {
           props: { variant: 'h6' },
           style: {
-            // fontFamily: ['Stapel', 'sans-serif', ].join(','),
+            fontSize: 14,
+            fontWeight: 700,
           }
         },
         {
