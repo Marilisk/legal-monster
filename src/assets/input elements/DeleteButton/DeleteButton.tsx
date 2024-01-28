@@ -27,9 +27,7 @@ export const DeleteButton: FC<IButtonProps> = ({
         disabled={disabled}
         type='button'
         onClick={() => {
-            // console.log('in IconButton !')
             callBack && callBack()
-
         }} >
         <DeleteIcon />
     </IconButton>

@@ -2,11 +2,20 @@
 
 
 .wrap {
-  height: 400px;
+  height: 300px;
   width: 500px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
 }
 
-
-.confirmWrap {
-  border: 1px solid palegreen;
+.btnsWrap {
+  display: flex;
+  justify-content: space-between;
+  height: 50%;
+  align-items: center;
+  margin-bottom: 0;
 }

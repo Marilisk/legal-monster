@@ -2,7 +2,6 @@
 
 .container {
     border-radius: 8px;
-    // font-size: $small-fontSize;
     transition: all 200ms linear;
     width: 70vw;
     background: transparent;
@@ -25,20 +24,11 @@
     color: white;
     display:  flex;
     justify-content: space-between;
+    align-items: center;
 
     p {
         font-size: 20px;
         font-weight: 600;
     }
-
-    /* button {
-        background: transparent;
-        //border: 1px solid red;
-        margin: 0;
-        padding: 0;
-        color: inherit;
-        display: flex;
-        align-items: center;
-    } */
 
 }
