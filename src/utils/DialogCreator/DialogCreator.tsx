@@ -1,10 +1,12 @@
 import { ReactNode, useState, useRef, createContext } from "react"
-import { createPortal} from "react-dom"
+import { createPortal } from "react-dom"
 import c from './DialogCreator.module.scss'
 import { createRoot } from "react-dom/client"
 import { Provider } from 'react-redux';
 import { store } from './../../redux/redux-store';
 import { useGetPosition } from "./DialogCreator.hooks";
+import { ThemeProvider } from '@mui/material';
+import theme from "../../styles/theme";
 
 
 /**
@@ -22,7 +24,7 @@ interface ICloseModalContext {
     closeModal: () => void
 }
 
-export const CloseModalContext = createContext({ } as ICloseModalContext  )
+export const CloseModalContext = createContext({} as ICloseModalContext)
 
 
 const Dialog = ({ component, onClose }: IDialogProps) => {
@@ -51,17 +53,18 @@ const Dialog = ({ component, onClose }: IDialogProps) => {
     return <div className={c.backGround} onClick={(e) => handleClose(e)} >
         {
             isOpen && createPortal(
-                <div className={c.wrapper} ref={modalRef}
-                    style={{
-                        left: `calc(50vw - ${left}px )`,
-                        top: `calc(50vh - ${top}px )`,
-                        //border: '2px solid blue'
-                    }}
-                >
-                    <CloseModalContext.Provider value={{ closeModal: closeImperatively }}>
-                        {component}
-                    </CloseModalContext.Provider>
-                </div>,
+                <ThemeProvider theme={theme}>
+                    <div className={c.wrapper} ref={modalRef}
+                        style={{
+                            left: `calc(50vw - ${left}px )`,
+                            top: `calc(50vh - ${top}px )`,
+                        }}
+                    >
+                        <CloseModalContext.Provider value={{ closeModal: closeImperatively }}>
+                            {component}
+                        </CloseModalContext.Provider>
+                    </div>
+                </ThemeProvider>,
                 document.body
             )
         }
@@ -90,9 +93,4 @@ export const createModal = ({ component, }: IcreateModalProps) => {
         </Provider>
     )
 }
-
-
-
-
-
 

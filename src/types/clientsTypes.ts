@@ -105,3 +105,28 @@ export type ClientsInitStateType = {
 
 export type PriorityType = 'high' | 'middle' | 'low'
 
+
+export interface IDadataCompany {
+    value: string
+    // unrestricted_value: string
+    data: {
+        address: {
+            unrestricted_value: string
+            data: {
+                federal_district: string
+                city_area: string
+                city_district: string
+                street: string
+                house: string
+            }
+        }
+        name: {
+            full: string
+            full_with_opf: string
+            short_with_opf: string
+        }
+        kpp: string
+        inn: string
+    }
+}
+

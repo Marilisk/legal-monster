@@ -24,6 +24,7 @@ const theme = createTheme({
     borderRadius: 10,
   },
   spacing: 10,
+  
   palette: {
     primary: {
       main: '#69BFAF',
@@ -58,7 +59,7 @@ const theme = createTheme({
         {
           props: { variant: 'h1' },
           style: {
-            // fontFamily: ['Stapel', 'sans-serif', ].join(','),
+            // fontFamily: 'Vollkorn',
             fontSize: 40,
             fontWeight: 500,
           }
@@ -66,6 +67,7 @@ const theme = createTheme({
         {
           props: { variant: 'h2' },
           style: {
+            // fontFamily: 'Vollkorn',
             fontSize: 28,
             fontWeight: 500,
             marginBottom: 10,
@@ -73,7 +75,8 @@ const theme = createTheme({
         },
         {
           props: { variant: 'h3' },
-          style: {
+          style: { 
+            // fontFamily: 'Vollkorn',
             fontSize: 18,
             fontWeight: 700,
           }
@@ -81,12 +84,21 @@ const theme = createTheme({
         {
           props: { variant: 'h4' },
           style: {
+            // fontFamily: 'Vollkorn',
+            fontSize: 16,
+          }
+        },
+        {
+          props: { variant: 'h5' },
+          style: {
+            // fontFamily: 'Vollkorn',
             fontSize: 16,
           }
         },
         {
           props: { variant: 'h6' },
           style: {
+            // fontFamily: 'Vollkorn',
             fontSize: 14,
             fontWeight: 700,
           }
@@ -101,7 +113,7 @@ const theme = createTheme({
           props: { variant: 'subtitle1' },
           style: {
             fontSize: 18,
-            // fontFamily: ['Stapel', 'sans-serif', ].join(','),
+            // fontFamily: 'Vollkorn',
             fontWeight: 500,
           }
         },
@@ -132,6 +144,11 @@ const theme = createTheme({
         }, 
       },
     },
+    MuiTextField: {
+      defaultProps: {
+        variant: "filled",
+      }
+    }
     /* MuiAutocomplete: {
       styleOverrides: {
         tag: {

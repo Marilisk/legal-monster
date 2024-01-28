@@ -10,7 +10,6 @@ import { fetchEditClientStaff } from '../../../../../redux/clientsSlice';
 interface IStaffGroupProps {
     variantsArray: IUser[]
     valuesArray: string[]
-    //setFieldValue: (arg1: string, arg2: string[], arg3: boolean) => void
     name: 'lawyers' | 'managers'
     title: string
     clientId: string
@@ -27,7 +26,7 @@ const StaffGroup: FC<IStaffGroupProps> = ({ variantsArray, valuesArray, name, ti
     }
 
 
-    return <div className={c.wrap} /* style={{border: '1px solid red'}} */>
+    return <div className={c.wrap} >
         <h3>{title}</h3>
         <div className={c.flex}>
             

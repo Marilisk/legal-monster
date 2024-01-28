@@ -3,6 +3,7 @@ import { Button } from '../button/Button'
 import c from './ConfirmDialog.module.scss'
 import { CloseModalContext, createModal } from '../../../utils/DialogCreator/DialogCreator'
 import { IWithConfirmDialog } from './ConfirmDialog'
+import { Typography } from '@mui/material'
 
 
 interface IProps {
@@ -17,8 +18,8 @@ const ConfirmDialog: FC<IProps> = ({ text, action, title }: IProps) => {
 
     return (
         <div className={c.wrap}>
-            {title}
-            {text}
+            <Typography variant='h3'>{title}</Typography>
+            <p>{text}</p>
             <div className={c.btnsWrap}>
             <Button
                 callBack={() => {

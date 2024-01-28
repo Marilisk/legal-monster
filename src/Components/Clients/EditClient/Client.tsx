@@ -2,14 +2,14 @@ import { FC, useEffect } from 'react'
 import c from './Client.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LoadingStatusEnum } from '../../../types/userTypes';
-import PopupHeader from '../../../assets/PopupWrapper/PopupWrapper';
 import ContactsPresenter from '../../../assets/ContactsPresenter/ContactsPresenter';
 import InfoPart from './EditClientForm/InfoPart/InfoPart';
 import { Tabs } from '../../../assets/Tabs/Tabs';
-import { fetchDeleteClient, fetchGetOneClient } from '../../../redux/clientsSlice';
+import { fetchGetOneClient } from '../../../redux/clientsSlice';
 import MainClientTab from './EditClientForm/MainClientTab/MainClientTab';
 import ClientCasesTab from './EditClientForm/ClientCasesTab/ClientCasesTab';
 import { LoadingDotsPreloader } from '../../../assets/LoadingDots/LoadingDotsPreloader';
+import { Typography } from '@mui/material';
 
 interface IClientProps {
     clientId: string
@@ -34,11 +34,8 @@ const Client: FC<IClientProps> = ({ clientId }: IClientProps) => {
     }
 
     return <>
-        <PopupHeader title={`${client.name}`}
-            handleDelete={() => dispatch(fetchDeleteClient(client._id))}
-            content={<ContactsPresenter contacts={client.contactPersons} />}
-            id='editClientPopup'
-        />
+        <Typography variant='h2'>{client.name}</Typography>
+        <ContactsPresenter contacts={client.contactPersons} />
         <div className={c.flexWrap}>
 
             <InfoPart client={client} /* setEditMode={() => setEditMode(!editMode)} */ />

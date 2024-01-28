@@ -29,7 +29,8 @@ export const ActionsItem: FC<IActionProps> = ({
     /* console.log('******************note.createdAt', note.createdAt)
     console.log(new Date(Date.parse(note.createdAt))) */
 
-    return <Paper sx={{ color: note.isDone ? '#7C7D7D' : 'inherit', mb: 2, background: assets.bgColor }} className={note.isDone ? c.doneWrap : c.wrap}
+    return <Paper sx={{ color: note.isDone ? '#7C7D7D' : 'inherit', mb: 2, background: assets.bgColor }} 
+        className={note.isDone ? c.doneWrap : c.wrap}
         onMouseEnter={() => note._id && note._id !== hoveredLine && setHoveredLine(note._id)}
         onMouseLeave={() => setHoveredLine('')}
     >
@@ -49,63 +50,30 @@ export const ActionsItem: FC<IActionProps> = ({
         <div className={c.titleCol}>
             <div>
                 {assets.icon}
-                <Typography variant="h3">{note.title}</Typography>
+                <Typography variant="h6">{note.title}</Typography>
                 <div className={c.doneCol}>
-
-
-                    {/* <DeleteButton callBack={deleteItem} visible={hoveredLine === note._id} /> */}
                     
                     <DeleteButtonWithConfirm callBack={deleteItem} visible={hoveredLine === note._id}
-                        confirmBtnText="точно?"
-                        confirmTitle="точно удалить?"
-
+                        confirmBtnText="отменить удаление невозможно"
+                        confirmTitle="Уверены, что хотите удалить это?"
                     />
-                    
-
                     {
                         setEditableNote &&
                         <EditButton callBack={() => setEditableNote(note)} visible={hoveredLine === note._id} />
                     }
-
                 </div>
             </div>
             {note.type !== 'note' &&
                 <div>{note.text}</div>
             }
             {note.type !== 'note' && note.type !== 'document' &&
-            <>
-                {/* <div>
-                    <Divider />
-                    <Typography variant="subtitle2">Результат:</Typography>
-                    {note.result}
-
-                    <>
-                        {
-                            !note.isDone ?
-                                <>
-                                    <NoBorderButton type="button" small
-                                        callBack={() => edit({ ...note, isDone: true })} >
-                                        <div>отметить выполненным</div>
-                                    </NoBorderButton>
-                                </>
-                                :
-                                <DoneTask />
-                        }
-                    </>
-                </div> */}
                 <Result
                     result={note.result}
                     isDone={note.isDone}
                     editResult={(v) => edit({ ...note, isDone: true, result: v  }) }
-                        
                 />
-                </>
             }
-
         </div>
-
-
-
 
     </Paper>
 }

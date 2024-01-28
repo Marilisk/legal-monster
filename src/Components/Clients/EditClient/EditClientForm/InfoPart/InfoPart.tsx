@@ -15,15 +15,17 @@ import { Button } from '../../../../../assets/input elements/button/Button'
 import { spotIfAnyFormFieldChanged } from '../../../../../assets/functions/spotIfAnyFieldChanged'
 import StaffGroup from '../StaffGroup/StaffGroup'
 import PipeLineSelector from '../PipeLineSelector/PipeLineSelector'
-import NotesArray from '../NotesArray/ActivityArray'
+import CompanySuggester from '../../../../../assets/CompanySuggester/CompanySuggester'
+import { IconButton } from '@mui/material'
+import { CloseButton } from '../../../../../assets/input elements/CloseButton/CloseButton'
+import ContactsList from './components/ContactsList'
 
 
 interface IInfoPartProps {
     client: IClient
-    // setEditMode: () => void
 }
 
-const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartProps) => {
+const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
 
     const dispatch = useAppDispatch()
     const wasAnyFieldChangedFlag = useAppSelector(s => s.clients.wasAnyClientFieldChangedFlag)
@@ -34,8 +36,6 @@ const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartPr
     const isOwner = useAppSelector(s => s.auth.loginData.data?.role === 'owner')
     const canChangeResponsibleUser = useAppSelector(s => s.auth.loginData.data?.powers.canChangeResponsibleUser)
 
-
-    
     const loadingStatus = useAppSelector(s => s.clients.clients.status)
 
     const setIfAnyFieldChangedFlag = (v: boolean) => {
@@ -52,33 +52,26 @@ const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartPr
         contracts: client.contracts,
         projects: client.projects,
         events: client.events,
-        notes: client.notes,
+        // notes: client.notes,
     }
 
     return (
         <div className={c.leftInfoPart} >
             <div className={c.header}>
                 <h2>Клиент</h2>
-                <button onClick={() => setEditMode(!editMode)} type='button'>
+                <IconButton onClick={() => setEditMode(!editMode)} >
                     <EditIcon color='#69BFAF' size={20} />
-                </button>
+                </IconButton>
+                <CloseButton />
             </div>
-            <div>
-                {client.contactPersons.map((person, i) => (
-                    <div key={i}>
-                        <div>{person.name}</div>
-                        <div>{person.job}</div>
-                        <div>{person.phone}</div>
-                    </div>
-                ))}
-            </div>
+            <ContactsList contactPersons={client.contactPersons} />
             <div>
                 <p>создан: </p>
-                {formatDate(new Date(Date.parse(client.createdAt))) }
+                {formatDate(new Date(Date.parse(client.createdAt)))}
             </div>
 
 
-             {editMode &&
+            {editMode &&
                 <Formik initialValues={initialValues}
                     enableReinitialize={true}
                     onSubmit={(values, actions) => {
@@ -110,13 +103,26 @@ const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartPr
                                 </div>
 
                                 <div className={editMode ? c.block : c.hiddenBlock}>
-                                    <FormTextField name="name" value={props.values.name}
-                                        label={props.values.form === 'физическое лицо' ? 'имя' : 'наименование'}
-                                        error={props.errors.name}
-                                        validate={(value) => basicLengthValidate(value, 3)}
-                                        touched={props.touched.name} />
+                                    {props.values.form === 'физическое лицо' ?
+                                        <FormTextField name="name" value={props.values.name}
+                                            label={props.values.form === 'физическое лицо' ? 'имя' : 'наименование'}
+                                            error={props.errors.name}
+                                            validate={(value) => basicLengthValidate(value, 3)}
+                                            touched={props.touched.name} />
+                                        :
+                                        <CompanySuggester
+                                            handleChange={(data) => {
+                                                // console.log(data)
+                                            }}
+                                            onInputChange={(v) => props.setFieldValue('name', v)}
+                                            name="name" value={props.values.name}
+                                        />
+                                    }
+
                                     {props.values.form !== 'физическое лицо' &&
-                                        <FormTextField name="INNnumber" value={props.values.INNnumber} label='ИНН'
+                                        <FormTextField name="INNnumber"
+                                            value={props.values.INNnumber}
+                                            label='ИНН'
                                             error={props.errors.INNnumber}
                                             validate={props.values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
                                             touched={props.touched.INNnumber} />
@@ -133,7 +139,7 @@ const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartPr
                                         />
                                     </div>
                                     :
-                                    <div>{ props.values.contactPersons[0].phone }</div>
+                                    <div>{props.values.contactPersons[0].phone}</div>
                                 }
 
                                 <div className={c.btnsContainer}>
@@ -148,8 +154,7 @@ const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartPr
                         </Form>
                     )}
                 </Formik>
-            } 
-
+            }
 
             {Boolean(myManagers.length) && (canChangeResponsibleUser || isOwner)
                 &&
@@ -166,26 +171,23 @@ const InfoPart: FC<IInfoPartProps> = ({ client, /* setEditMode */ }: IInfoPartPr
 
             {Boolean(myLawyers.length) && (canChangeResponsibleUser || isOwner)
                 &&
-                
-                    <StaffGroup name="lawyers"
-                        valuesArray={client.lawyers}
-                        variantsArray={myLawyers}
-                        title='Ответственные юристы'
-                        //setFieldValue={props.setFieldValue}
-                        clientId={client._id}
-                        editMode={editMode}
-                    />
-                
+                <StaffGroup name="lawyers"
+                    valuesArray={client.lawyers}
+                    variantsArray={myLawyers}
+                    title='Ответственные юристы'
+                    //setFieldValue={props.setFieldValue}
+                    clientId={client._id}
+                    editMode={editMode}
+                />
+
             }
 
             <div className={!editMode ? c.block : c.hiddenBlock}>
                 <PipeLineSelector value={client.phase.number}
                     setIfAnyFieldChangedFlag={wasAnyFieldChangedFlag ? undefined : setIfAnyFieldChangedFlag}
                     setFieldValue={(value: number) => dispatch(syncEditClient({ _id: client._id, fieldName: 'phase', values: { number: value, assignDateTimestamp: Date.now() } }))} />
-            </div> 
+            </div>
 
-           
-            
         </div>
     )
 }

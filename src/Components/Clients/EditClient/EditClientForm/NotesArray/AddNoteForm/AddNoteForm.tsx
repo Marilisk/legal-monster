@@ -24,7 +24,8 @@ interface IAddNoteFormProps {
     fullName: string
     authorId: string
     clientId: string
-    setFormVisible: (arg: boolean) => void
+    // setFormVisible: (arg: boolean) => void
+    closeForm: () => void
     editibleNote?: IActivity
     fetchEdit?: (arg: IActivity) => void
     type: ClientActivityType
@@ -36,7 +37,7 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
     fullName,
     authorId,
     clientId,
-    setFormVisible,
+    closeForm,
     fetchEdit,
     type,
 }: IAddNoteFormProps) => {
@@ -78,7 +79,7 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
                         dispatch(fetchCreateNote(payload))
                     }
                     actions.resetForm()
-                    setFormVisible(false)
+                    closeForm()
                 }} >
 
                 {({ values, errors, touched, setFieldValue, initialValues }) => (
@@ -87,7 +88,7 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
                             {!editibleNote && <Typography variant='h2'>
                                 {'Нов' + assets.ending} {assets.text} :
                             </Typography>}
-                            <CancelButton callBack={() => setFormVisible(false)} />
+                            <CancelButton callBack={closeForm} />
                             type {type}
                         </div>
 

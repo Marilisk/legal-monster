@@ -8,7 +8,6 @@ interface INewClientProps {
 }
 const NewClient: FC<INewClientProps> = ({ }: INewClientProps) => {
 
-
     return (
         <PopupWrapper title={'Новый клиент'} >
             <NewClientForm />

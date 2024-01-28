@@ -8,7 +8,7 @@ import { NoBorderButton } from '../../../../../assets/input elements/NoBorderBut
 import { ActionsItem } from './LastActionItem/ActionItem';
 import { fetchDeleteNote, fetchEditNote, syncEditClient } from '../../../../../redux/clientsSlice';
 import AddActivityBtns from './AddActivityBtns/AddActivityBtns';
-import { Divider, Typography } from '@mui/material';
+import { Collapse, Divider, Fade, Typography } from '@mui/material';
 
 interface IActivityArrayProps {
     array: IActivity[] | undefined
@@ -43,6 +43,11 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
         setEditibleNoteItem(note)
     }
 
+    const closeForm = () => {
+        setFormVisible(false)
+        setEditibleNoteItem(undefined)
+    }
+
     // console.log('editibleNote', editibleNote)
 
     if (!fullName || !authorId) return null
@@ -62,44 +67,58 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
                 isFormVisible={isFormVisible}
                 setFormActivityType={setFormActivityType} />
 
-            {/*   {Boolean(array?.length) &&
-                <CurrentNote note={todoArray[currentItemIdx]} />} */}
-
-            <div className={isFormVisible ? c.form : c.hiddenForm}>
-                <AddNoteForm fullName={fullName} authorId={authorId}
-                    clientId={clientId}
-                    setFormVisible={setFormVisible}
-                    editibleNote={editibleNote}
-                    fetchEdit={edit}
-                    type={formActivityType} />
-            </div>
+            <Collapse in={isFormVisible && !editibleNote}>
+                <div>
+                    <AddNoteForm fullName={fullName} authorId={authorId}
+                        clientId={clientId}
+                        closeForm={closeForm}
+                        type={formActivityType} />
+                </div>
+            </Collapse>
 
             {!!todoArray.length &&
                 <div className={c.block} >
-                    
+
                     <Typography variant='h2'>Предстоящие действия</Typography>
 
                     {todoArray.map((el, i) => {
 
-                        if (el.type === 'court' || el.type === 'meeting') {
-                            return <MeetingItem key={`${el._id}${i}-m`}
-                                note={el}
-                                edit={edit}
-                                deleteItem={() => deleteNote(el._id)}
-                                hoveredLine={hoveredLine}
-                                setHoveredLine={setHoveredLine}
-                                setEditableNote={setEditableNote}
-                            />
-                        }
-                        return <ActionsItem key={`${el._id}${i}` || `${el.createTimeStamp}${i}`}
-                            note={el}
-                            edit={edit}
-                            deleteItem={() => deleteNote(el._id)}
-                            hoveredLine={hoveredLine}
-                            setHoveredLine={setHoveredLine}
-                            setEditableNote={setEditableNote}
-                        />
+                        return <div key={el._id}>
+                            
+                                <Collapse in={editibleNote?._id === el._id}>
+                                    <div>
+                                        <AddNoteForm fullName={fullName} authorId={authorId}
+                                            clientId={clientId}
+                                            closeForm={closeForm}
+                                            editibleNote={editibleNote}
+                                            fetchEdit={edit}
+                                            type={formActivityType} />
+                                    </div>
+                                </Collapse>
+                            
+
+                            {el.type === 'court' || el.type === 'meeting' ?
+                                <MeetingItem key={`${el._id}${i}-m`}
+                                    note={el}
+                                    edit={edit}
+                                    deleteItem={() => deleteNote(el._id)}
+                                    hoveredLine={hoveredLine}
+                                    setHoveredLine={setHoveredLine}
+                                    setEditableNote={setEditableNote}
+                                />
+                                :
+                                <ActionsItem key={`${el._id}${i}` || `${el.createTimeStamp}${i}`}
+                                    note={el}
+                                    edit={edit}
+                                    deleteItem={() => deleteNote(el._id)}
+                                    hoveredLine={hoveredLine}
+                                    setHoveredLine={setHoveredLine}
+                                    setEditableNote={setEditableNote}
+                                />
+                            }
+                        </div>
                     }
+
                     )}
                 </div>
             }

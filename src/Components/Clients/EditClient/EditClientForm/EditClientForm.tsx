@@ -22,7 +22,7 @@ const EditClientForm: FC<IEditClientFormProps> = ({ client }: IEditClientFormPro
     const dispatch = useAppDispatch()
     const wasAnyFieldChangedFlag = useAppSelector(s => s.clients.wasAnyClientFieldChangedFlag)
     const [editMode, setEditMode] = useState(false)
-    
+
     const loadingStatus = useAppSelector(s => s.clients.clients.status)
 
     const setIfAnyFieldChangedFlag = (v: boolean) => {
@@ -48,9 +48,6 @@ const EditClientForm: FC<IEditClientFormProps> = ({ client }: IEditClientFormPro
 
     return <div className={c.wrap}>
         <PopupHeader title={`${client.name}`}
-            handleDelete={deleteClient}
-            content={<ContactsPresenter contacts={client.contactPersons} />}
-            id='editClientPopup'
         />
         <div className={c.flexWrap}>
 
@@ -59,39 +56,39 @@ const EditClientForm: FC<IEditClientFormProps> = ({ client }: IEditClientFormPro
             <Tabs tabsArray={[
                 {
                     name: 'клиент',
-                    component: <MainClientTab 
+                    component: <MainClientTab
                         client={client}
-                        /* editMode={editMode}
-                        wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
-                        setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
-                        loadingStatus={loadingStatus} */
+                    /* editMode={editMode}
+                    wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
+                    setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
+                    loadingStatus={loadingStatus} */
                     />
                 },
 
                 {
                     name: 'Лента',
-                    component: <MainClientTab 
+                    component: <MainClientTab
                         client={client}
-                        /* editMode={editMode}
-                        wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
-                        setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
-                        loadingStatus={loadingStatus} */
+                    /* editMode={editMode}
+                    wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
+                    setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
+                    loadingStatus={loadingStatus} */
                     />
                 },
 
                 {
                     name: 'Связанные дела',
-                    component: <ClientCasesTab 
+                    component: <ClientCasesTab
                         client={client}
-                        /* editMode={editMode}
-                        wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
-                        setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
-                        loadingStatus={loadingStatus} */
+                    /* editMode={editMode}
+                    wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
+                    setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
+                    loadingStatus={loadingStatus} */
                     />
                 },
 
 
-                
+
             ]} />
 
         </div>
