@@ -19,6 +19,7 @@ import CompanySuggester from '../../../../../assets/CompanySuggester/CompanySugg
 import { IconButton } from '@mui/material'
 import { CloseButton } from '../../../../../assets/input elements/CloseButton/CloseButton'
 import ContactsList from './components/ContactsList'
+import { selectIsOwner } from '../../../../../redux/authSlice'
 
 
 interface IInfoPartProps {
@@ -28,13 +29,21 @@ interface IInfoPartProps {
 const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
 
     const dispatch = useAppDispatch()
-    const wasAnyFieldChangedFlag = useAppSelector(s => s.clients.wasAnyClientFieldChangedFlag)
     const [editMode, setEditMode] = useState(false)
     const clientContactsLength = client.contactPersons.length
-    const myManagers = useAppSelector(s => s.staff.managers.items)
-    const myLawyers = useAppSelector(s => s.staff.lawyers.items)
-    const isOwner = useAppSelector(s => s.auth.loginData.data?.role === 'owner')
-    const canChangeResponsibleUser = useAppSelector(s => s.auth.loginData.data?.powers.canChangeResponsibleUser)
+    const isOwner = useAppSelector(selectIsOwner)
+
+    const {
+        wasAnyFieldChangedFlag,
+        myManagers,
+        myLawyers,
+        canChangeResponsibleUser,
+    } = useAppSelector(s => ({
+        wasAnyFieldChangedFlag: s.clients.wasAnyClientFieldChangedFlag,
+        myManagers: s.staff.managers.items,
+        myLawyers: s.staff.lawyers.items,
+        canChangeResponsibleUser: s.auth.loginData.data?.powers.canChangeResponsibleUser,
+    }))
 
     const loadingStatus = useAppSelector(s => s.clients.clients.status)
 
@@ -52,7 +61,6 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
         contracts: client.contracts,
         projects: client.projects,
         events: client.events,
-        // notes: client.notes,
     }
 
     return (
@@ -111,11 +119,9 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
                                             touched={props.touched.name} />
                                         :
                                         <CompanySuggester
-                                            handleChange={(data) => {
-                                                // console.log(data)
-                                            }}
-                                            onInputChange={(v) => props.setFieldValue('name', v)}
-                                            name="name" value={props.values.name}
+                                            setFieldValue={props.setFieldValue}
+                                            name="name"
+                                            value={props.values.name}
                                         />
                                     }
 
@@ -175,11 +181,9 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
                     valuesArray={client.lawyers}
                     variantsArray={myLawyers}
                     title='Ответственные юристы'
-                    //setFieldValue={props.setFieldValue}
                     clientId={client._id}
                     editMode={editMode}
                 />
-
             }
 
             <div className={!editMode ? c.block : c.hiddenBlock}>
