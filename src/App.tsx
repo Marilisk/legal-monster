@@ -6,6 +6,7 @@ import { refreshAuth, selectIsAuth } from './redux/authSlice';
 import { useEffect } from 'react';
 import { LoadingDotsPreloader } from './assets/LoadingDots/LoadingDotsPreloader';
 import { LoadingStatusEnum } from './types/userTypes';
+import { useLoadAppData } from './utils/helpers/useLoadAppData';
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
       navigate('/login')
     }
   }, [navigate, isAuth, authLoadingStatus])
+
+  useLoadAppData()
 
   if (localStorage.getItem('token') && !isAuth) {
     return <LoadingDotsPreloader />

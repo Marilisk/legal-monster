@@ -79,13 +79,9 @@ const  ContactsFieldArray =  ({ name, array, title, syncEdit, clientContactsLeng
                             </div>
                         })
                     }
-
                 </div>
-
             </>}
-
         </FieldArray>
-
     </div>
 
 }

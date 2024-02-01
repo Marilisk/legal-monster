@@ -1,21 +1,18 @@
-import { ChangeEvent, FC, SyntheticEvent, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { StyledTextField } from '../input elements/formTextField/FormTextField'
 import dadataApi from '../../redux/api/dadataApi'
-import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason } from '@mui/material'
+import { Autocomplete, MenuItem } from '@mui/material'
 import { IDadataCompany } from '../../types/clientsTypes'
 
 interface IProps {
     value: string
     name: string
-    handleChange: (companyData: IDadataCompany) => void
-    onInputChange: (e: string) => void
+    setFieldValue: (f: string, v: string) => void
 }
 
 const CompanySuggester: FC<IProps> = ({
     value,
-    name,
-    handleChange,
-    onInputChange,
+    setFieldValue,
 
 }: IProps) => {
 
@@ -38,46 +35,44 @@ const CompanySuggester: FC<IProps> = ({
         return () => clearTimeout(timer)
     }, [value])
 
-    const options = tipsData.map(item =>({
+    const options = tipsData.map(item => ({
         ...item,
         label: item.value,
         key: item.data.inn,
     }))
 
-    const onChange = (event: SyntheticEvent<Element, Event>, value: string | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => {
-        console.log(event)
-        // handleChange()
+    const onChange = (newValue: IDadataCompany | null) => {
+        if (newValue) {
+            newValue?.value && setFieldValue('name', newValue?.value)
+            setFieldValue('INNnumber', newValue?.data.inn)
+        }
     }
 
 
     return (
         <div>
             <Autocomplete
-                // disablePortal
                 autoComplete
                 options={options}
+                onChange={(event: any, newValue: IDadataCompany | null) => {
+                    onChange(newValue);
+                  }}
                 renderInput={(params) => {
-                    // console.log('params', params)
                     return <StyledTextField
-                    {...params}
-                    // name={name}
-                    value={value}
-                    //label="Введите наименование" 
-                    onChange={(e) => onInputChange(e.target.value)}
+                        {...params} 
+                        value={value}
+                        label="Введите наименование" 
+                        onChange={(e) => setFieldValue('name', e.target.value)}
                     />
-                } 
-                }
-                // onChange={onChange}
-               /*  renderOption={(props) => {
-                    console.log('props', props)
-                    return <div key={props.id}  {...props}
-                        // onClick={() => props.onChange() }
-                        >
-                        
-                      
-                    </div>
-                }} */
-            />
+                }}
+             renderOption={(props, option) => {
+                 console.log('props', props)
+                 console.log('option', option)
+                 return <MenuItem key={option.data.inn}  {...props} >
+                     {option.value}
+                 </MenuItem>
+             }}
+            />            
         </div>
     )
 }

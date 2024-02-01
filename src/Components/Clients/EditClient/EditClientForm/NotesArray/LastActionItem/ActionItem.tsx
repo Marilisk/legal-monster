@@ -1,11 +1,9 @@
 import { FC } from "react"
 import { IActivity } from "../../../../../../types/clientsTypes"
 import c from './ActionItem.module.scss'
-import { DoneTask } from "../../../../../../assets/Icons/DoneTask"
-import { NoBorderButton } from "../../../../../../assets/input elements/NoBorderButton/NoBorderButton"
-import { brieflyformatDate, smartFormatDate } from "../../../../../../assets/functions/formatDate"
-import { DeleteButton, DeleteButtonWithConfirm } from "../../../../../../assets/input elements/DeleteButton/DeleteButton"
-import { Card, CardContent, Divider, Paper, Typography, hexToRgb } from "@mui/material"
+import { smartFormatDate } from "../../../../../../assets/functions/formatDate"
+import { DeleteButtonWithConfirm } from "../../../../../../assets/input elements/DeleteButton/DeleteButton"
+import { Divider, Paper, Typography } from "@mui/material"
 import EditButton from "../../../../../../assets/input elements/EditButton/EditButton"
 import { useGetActivityTitleFromType } from "../getPriorityText"
 import Result from "./Result"
@@ -54,8 +52,8 @@ export const ActionsItem: FC<IActionProps> = ({
                 <div className={c.doneCol}>
                     
                     <DeleteButtonWithConfirm callBack={deleteItem} visible={hoveredLine === note._id}
-                        confirmBtnText="отменить удаление невозможно"
-                        confirmTitle="Уверены, что хотите удалить это?"
+                        confirmBtnText={note.title || 'запись' + '?'}
+                        confirmTitle='Уверены, что хотите удалить '
                     />
                     {
                         setEditableNote &&

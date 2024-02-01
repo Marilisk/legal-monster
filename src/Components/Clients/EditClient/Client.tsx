@@ -9,7 +9,7 @@ import { fetchGetOneClient } from '../../../redux/clientsSlice';
 import MainClientTab from './EditClientForm/MainClientTab/MainClientTab';
 import ClientCasesTab from './EditClientForm/ClientCasesTab/ClientCasesTab';
 import { LoadingDotsPreloader } from '../../../assets/LoadingDots/LoadingDotsPreloader';
-import { Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 
 interface IClientProps {
     clientId: string
@@ -34,11 +34,13 @@ const Client: FC<IClientProps> = ({ clientId }: IClientProps) => {
     }
 
     return <>
-        <Typography variant='h2'>{client.name}</Typography>
-        <ContactsPresenter contacts={client.contactPersons} />
+        <Paper sx={{ mt: 2, mb: 2 }}>
+            <Typography variant='h2'>{client.name}</Typography>
+            <ContactsPresenter contacts={client.contactPersons} />
+        </Paper>
         <div className={c.flexWrap}>
 
-            <InfoPart client={client} /* setEditMode={() => setEditMode(!editMode)} */ />
+            <InfoPart client={client} />
 
             <Tabs tabsArray={
                 [

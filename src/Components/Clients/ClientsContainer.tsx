@@ -3,8 +3,8 @@ import { Clients } from './Clients';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchGetClients } from '../../redux/clientsSlice';
 import { LoadingStatusEnum } from '../../types/userTypes';
-import { fetchGetMyStaff } from '../../redux/staffSlice';
 import { LoadingDotsPreloader } from '../../assets/LoadingDots/LoadingDotsPreloader';
+import { selectIsOwner } from '../../redux/authSlice';
 
 
 const ClientsContainer = () => {
@@ -16,7 +16,7 @@ const ClientsContainer = () => {
     const showNewClientPopup = useAppSelector(s => s.clients.showNewClientPopup)
     const showEditClient = useAppSelector(s => s.clients.showEditClientPopup)
     const showEditClientPopup = showEditClient.isOpened
-    const isOwner = useAppSelector(s => s.auth.loginData.data?.role === 'owner')
+    const isOwner = useAppSelector(selectIsOwner)
     const authUserRole = useAppSelector(s => s.auth.loginData.data?.role)
     const userId = useAppSelector(s => s.auth.loginData.data?._id)
     const canChangeResponsibleUser = useAppSelector(s => s.auth.loginData.data?.powers.canChangeResponsibleUser)
@@ -25,10 +25,6 @@ const ClientsContainer = () => {
 
     useEffect(() => {
         dispatch(fetchGetClients())
-        if (isOwner || canChangeResponsibleUser) {
-            dispatch(fetchGetMyStaff('manager'))
-            dispatch(fetchGetMyStaff('lawyer'))
-        }
     }, [isOwner, canChangeResponsibleUser])
 
     if (isLoading ) {

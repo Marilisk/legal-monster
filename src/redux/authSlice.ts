@@ -87,6 +87,7 @@ const authSlice = createSlice({
                 state.loginData.data = null;
             })
             .addCase(fetchLogout.rejected, (state) => {
+                state.loginData.serverMessage = ''
                 state.loginData.status = LoadingStatusEnum.error
             })
 

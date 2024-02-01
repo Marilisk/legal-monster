@@ -14,20 +14,17 @@ const InviteStaff = () => {
 
     useEffect(() => {
         dispatch(fetchGetCandidates())
-    }, [dispatch])
+    }, [])
 
     if (loadingStatus === LoadingStatusEnum.loading) {
         return <div>loading...</div>
     }
 
     return <div className={c.wrap} >
-        invite
-
-
+        
         <InviteStaffForm serverMessage={serverMessage} />
 
         {serverMessage && <div>{serverMessage}</div>}
-
 
         {Boolean(candidates.length) && <div>
             <h2>Ожидают регистрации:</h2>

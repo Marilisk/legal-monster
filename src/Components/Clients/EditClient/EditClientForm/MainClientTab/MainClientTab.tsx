@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react'
-import c from './MainClientTab.module.scss'
 import { IClient } from '../../../../../types/clientsTypes'
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks'
 import ActivityArray from '../NotesArray/ActivityArray'
@@ -24,11 +23,7 @@ const MainClientTab: FC<IMainClientTabProps> = ({
 
 
     return (
-        <div>
-            <div className={c.block }>
-                <ActivityArray array={activityArray} title='Активность' clientId={client._id} />
-            </div>
-        </div>
+        <ActivityArray array={activityArray} title='Активность' clientId={client._id} />
     )
 }
 

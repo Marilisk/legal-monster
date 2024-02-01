@@ -41,6 +41,7 @@ export type ILData = {
     serverMessage: string
 }
 export enum LoadingStatusEnum {
+    empty = 'empty',
     loading = 'loading',
     loaded = 'loaded',
     error = 'error',

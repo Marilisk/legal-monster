@@ -1,11 +1,9 @@
-import React, { FC, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import React, { FC } from 'react';
+import { useAppSelector } from '../../../../redux/hooks';
 import PopupHeader from '../../../../assets/PopupWrapper/PopupWrapper';
 import c from './EditClientForm.module.scss'
 import { IClient } from '../../../../types/clientsTypes';
-import { fetchDeleteClient, fetchEditClient, setWasAnyClientFieldChangedFlag } from '../../../../redux/clientsSlice';
 import { LoadingStatusEnum } from '../../../../types/userTypes';
-import ContactsPresenter from '../../../../assets/ContactsPresenter/ContactsPresenter';
 import InfoPart from './InfoPart/InfoPart';
 import { Tabs } from '../../../../assets/Tabs/Tabs';
 import MainClientTab from './MainClientTab/MainClientTab';
@@ -19,36 +17,14 @@ interface IEditClientFormProps {
 
 const EditClientForm: FC<IEditClientFormProps> = ({ client }: IEditClientFormProps) => {
 
-    const dispatch = useAppDispatch()
-    const wasAnyFieldChangedFlag = useAppSelector(s => s.clients.wasAnyClientFieldChangedFlag)
-    const [editMode, setEditMode] = useState(false)
-
     const loadingStatus = useAppSelector(s => s.clients.clients.status)
-
-    const setIfAnyFieldChangedFlag = (v: boolean) => {
-        dispatch(setWasAnyClientFieldChangedFlag(v))
-    }
-
-    const closeAndSaveEditClientPopup = async () => {
-        if (wasAnyFieldChangedFlag) {
-            const response = await dispatch(fetchEditClient(client))
-            if (response.meta.requestStatus === 'fulfilled') {
-                setIfAnyFieldChangedFlag(false)
-            }
-        }
-    }
-
-    const deleteClient = () => {
-        dispatch(fetchDeleteClient(client._id))
-    }
 
     if (loadingStatus === LoadingStatusEnum.loading) return <h1>Loading</h1>
     if (loadingStatus === LoadingStatusEnum.error) return <h1>Ошибка сохранения</h1>
 
 
     return <div className={c.wrap}>
-        <PopupHeader title={`${client.name}`}
-        />
+        <PopupHeader title={`${client.name}`} />
         <div className={c.flexWrap}>
 
             <InfoPart client={client} />
