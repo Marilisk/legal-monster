@@ -1,7 +1,6 @@
 import { FC, useState } from 'react'
 import c from './Tabs.module.scss'
-import { Button } from '../input elements/button/Button'
-import { TabButton } from '../input elements/tabButton/TabButton'
+import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 
 interface ITabsProps {
     tabsArray: {
@@ -18,32 +17,27 @@ export const Tabs: FC<ITabsProps> = ({ tabsArray }: ITabsProps) => {
     const [currentTabI, setCurrentTabI] = useState(0)
 
     return <div className={c.wrap}>
-        <div className={c.header}>
-            {tabNames.map((name, i) => <div key={i}>
-                <div>
-                    <TabButton isActive={i === currentTabI} callBack={() => setCurrentTabI(i)}>
-                        <div>{name}</div>
-                    </TabButton>
-                </div>
-            </div>)
+        <ToggleButtonGroup value={currentTabI}>
+            {tabNames.map((name, i) => (
+                <ToggleButton key={i} value={i} onClick={() => setCurrentTabI(i)}>
+                    {name}
+                </ToggleButton>
+            ))
             }
-        </div>
+        </ToggleButtonGroup>
 
         {
             tabsArray.map((tab, i) => {
 
                 if (i === currentTabI) {
                     return <div key={i} >
-                      
+
                         <div className={c.componentWrap}>
                             {tab.component}
                         </div>
                     </div>
                 } else return null
-
             })
         }
-
     </div>
-
 }

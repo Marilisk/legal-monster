@@ -4,15 +4,15 @@ import { IClient } from '../../../../../types/clientsTypes'
 import { EditIcon } from '../../../../../assets/Icons/EditIcon'
 import { formatDate } from '../../../../../assets/functions/formatDate'
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks'
-import { setWasAnyClientFieldChangedFlag, syncEditClient } from '../../../../../redux/clientsSlice'
+import { setWasAnyClientFieldChangedFlag } from '../../../../../redux/clientsSlice'
 import { LoadingStatusEnum } from '../../../../../types/userTypes'
 import StaffGroup from '../StaffGroup/StaffGroup'
-import PipeLineSelector from '../PipeLineSelector/PipeLineSelector'
 import { Collapse, IconButton, Paper } from '@mui/material'
 import { CloseButton } from '../../../../../assets/input elements/CloseButton/CloseButton'
 import ContactsList from './components/ContactsList'
 import { selectIsOwner } from '../../../../../redux/authSlice'
 import EditClientDataForm from './components/EditClientDataForm'
+
 
 
 interface IInfoPartProps {
@@ -69,10 +69,6 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
                         setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
                     />
                 </Collapse>
-
-                <PipeLineSelector value={client.phase.number}
-                    setIfAnyFieldChangedFlag={wasAnyFieldChangedFlag ? undefined : setIfAnyFieldChangedFlag}
-                    setFieldValue={(value: number) => dispatch(syncEditClient({ _id: client._id, fieldName: 'phase', values: { number: value, assignDateTimestamp: Date.now() } }))} />
 
             </Paper>
 

@@ -48,8 +48,6 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
         setEditibleNoteItem(undefined)
     }
 
-    // console.log('editibleNote', editibleNote)
-
     if (!fullName || !authorId) return null
 
     // ортируем чтобы первыми в массиве были самые ранние события

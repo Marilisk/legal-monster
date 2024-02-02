@@ -35,18 +35,22 @@ const CompanySuggester: FC<IProps> = ({
         return () => clearTimeout(timer)
     }, [value])
 
-    const options = tipsData.map(item => ({
+    const options = tipsData.map((item, i) => ({
         ...item,
         label: item.value,
-        key: item.data.inn,
+        key: `${item.data?.inn}${i}` || i,
     }))
 
     const onChange = (newValue: IDadataCompany | null) => {
+        
         if (newValue) {
+            console.log('newValue', newValue)
+            
             newValue?.value && setFieldValue('name', newValue?.value)
-            setFieldValue('INNnumber', newValue?.data.inn)
+            newValue?.data?.inn && setFieldValue('INNnumber', newValue?.data.inn)
         }
     }
+     
 
 
     return (
@@ -60,15 +64,20 @@ const CompanySuggester: FC<IProps> = ({
                 renderInput={(params) => {
                     return <StyledTextField
                         {...params} 
-                        value={value}
+                        // value={value}
                         label="Введите наименование" 
                         onChange={(e) => setFieldValue('name', e.target.value)}
                     />
                 }}
+                inputValue={value}
+
+                /* onInputChange={(event, newInputValue) => {
+                    setFieldValue('name',newInputValue);
+                  }} */
              renderOption={(props, option) => {
                  console.log('props', props)
                  console.log('option', option)
-                 return <MenuItem key={option.data.inn}  {...props} >
+                 return <MenuItem key={props.id}  {...props} >
                      {option.value}
                  </MenuItem>
              }}

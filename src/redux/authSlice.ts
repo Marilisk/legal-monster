@@ -41,10 +41,9 @@ export const refreshAuth = createAsyncThunk('auth/refreshAuth', async () => {
 
 export const fetchAddPipeline = createAsyncThunk('auth/fetchAddPipeline', async (params: SalesPhaseType[]) => {
     let response = await instance.post('/pipeline/edit', params);
-    console.log(response)
+    console.log('fetchAddPipeline response', response)
     return response.data
 })
-
 
 
 const initialState: AuthInitStateType = {

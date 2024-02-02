@@ -115,9 +115,9 @@ const theme = createTheme({
          root: {
           border: '1px solid #E1E9F2',
           borderRadius: '8px',
-          padding: '20px'
-          // background: '',
-          // boxShadow: '0 0 5px rgba(0, 0, 0, 0.25)',
+          '&>div, &>h2, &>h3': {
+            padding: '20px',
+          },
         }, 
       },
     },

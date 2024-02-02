@@ -13,9 +13,6 @@ const ClientsContainer = () => {
 
     const clients = useAppSelector(s => s.clients.clients.items)
     const isLoading = useAppSelector(s => s.clients.clients.status === LoadingStatusEnum.loading)
-    const showNewClientPopup = useAppSelector(s => s.clients.showNewClientPopup)
-    const showEditClient = useAppSelector(s => s.clients.showEditClientPopup)
-    const showEditClientPopup = showEditClient.isOpened
     const isOwner = useAppSelector(selectIsOwner)
     const authUserRole = useAppSelector(s => s.auth.loginData.data?.role)
     const userId = useAppSelector(s => s.auth.loginData.data?._id)
@@ -44,9 +41,7 @@ const ClientsContainer = () => {
         })
 
 
-    return <Clients clients={filteredClients}
-        showNewClientPopup={showNewClientPopup}
-        showEditClientPopup={showEditClientPopup} />
+    return <Clients clients={filteredClients} />
 };
 
 export default ClientsContainer;

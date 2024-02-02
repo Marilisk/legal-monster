@@ -1,10 +1,11 @@
-import { useState, FC } from 'react'
+import { useState, FC, ChangeEvent } from 'react'
 import c from './PipelineEditor.module.scss' 
 import { SalesPhaseType } from '../../../types/clientsTypes'
 import ColorPicker from '../../../assets/input elements/ColorPicker/ColorPicker'
 import { NoBorderButton } from '../../../assets/input elements/NoBorderButton/NoBorderButton'
 import { DoneIcon } from '../../../assets/Icons/DoneIcon'
 import { CrossIcon } from '../../../assets/Icons/CrossIcon/CrossIcon'
+import { CloseButton } from '../../../assets/input elements/CloseButton/CloseButton'
 
 
 interface IPipeLineItemProps {
@@ -32,7 +33,7 @@ export const PipeLineItem: FC<IPipeLineItemProps> = ({ element, saveItem, onDele
         <div className={c.title}>
             <input value={title}
                 className={isEditible ? c.editibleTitle : c.disabledTitle}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeTitle(e.target.value)} />
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeTitle(e.target.value)} />
         </div>
 
         {isEditible && <ColorPicker name='color' value={color} onChange={handleChangeColor} />}
@@ -53,14 +54,17 @@ export const PipeLineItem: FC<IPipeLineItemProps> = ({ element, saveItem, onDele
                 }
             </NoBorderButton>
         </div>
-
+      
         <div className={c.deleteBtn}>
+            
             <NoBorderButton type='button'>
                 <div onClick={onDelete} >
                     <CrossIcon color='#69BFAF' size='14px' />
                 </div>
             </NoBorderButton>
         </div>
+
+        <CloseButton callBack={onDelete} />
     </div>
 
 }

@@ -12,24 +12,16 @@ import { createModal } from "../../utils/DialogCreator/DialogCreator";
 
 interface IClientsProps {
     clients: IClient[]
-    showNewClientPopup: boolean
-    showEditClientPopup: boolean
 }
 
 
-export const Clients: FC<IClientsProps> = ({ clients, showNewClientPopup, showEditClientPopup }: IClientsProps) => {
+export const Clients: FC<IClientsProps> = ({ clients }: IClientsProps) => {
 
     const dispatch = useAppDispatch()
-    //const setShowNewClientPop = (value: boolean) => dispatch(setShowNewClientPopup(value))
 
     const filters = useAppSelector(s => s.clients.clientsFilters)
     const filteredClients: IClient[] = filterClients(filters, clients)
-    /* const sortedClients = filteredClients.sort((cl, nextCl) => new Date(cl.updatedAt).getTime() - new Date(nextCl.updatedAt).getTime() )
-    console.log(new Date(filteredClients[0].updatedAt).getTime())
-
-    const testArr = [5, 2, 10]
-    console.log(testArr.sort((a, b) => a - b)) */
-
+   
     const pipelineState = useAppSelector(s => s.auth.loginData.data?.ownerSettings.salesPipeline)
     const defaultPipeline = useAppSelector(s => s.clients.salesPipeline)
     let salesPipeline = pipelineState?.isCustom ? pipelineState.pipeline : defaultPipeline

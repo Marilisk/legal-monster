@@ -24,22 +24,24 @@ export const ActionsItem: FC<IActionProps> = ({
 
     const assets = useGetActivityTitleFromType(note.type)
 
-    /* console.log('******************note.createdAt', note.createdAt)
-    console.log(new Date(Date.parse(note.createdAt))) */
 
-    return <Paper sx={{ color: note.isDone ? '#7C7D7D' : 'inherit', mb: 2, background: assets.bgColor }} 
+    return <Paper sx={{
+        color: note.isDone ? '#7C7D7D' : 'inherit',
+        mb: 2,
+        background: assets.bgColor
+    }}
         className={note.isDone ? c.doneWrap : c.wrap}
         onMouseEnter={() => note._id && note._id !== hoveredLine && setHoveredLine(note._id)}
         onMouseLeave={() => setHoveredLine('')}
     >
         <div className={c.col} >
             <div>
-                {note.type !== 'note' && <>
-                    {smartFormatDate(new Date(note.deadLine))}
-                    <Divider />
-                </>
+                {
+                    note.type !== 'note' && <>
+                        {smartFormatDate(new Date(note.deadLine))}
+                        <Divider />
+                    </>
                 }
-
                 <Typography variant="body2">Создано: {note.author.fullName}&nbsp;
                     {smartFormatDate(new Date(Date.parse(note.createdAt)))}  </Typography>
             </div>
@@ -50,7 +52,7 @@ export const ActionsItem: FC<IActionProps> = ({
                 {assets.icon}
                 <Typography variant="h6">{note.title}</Typography>
                 <div className={c.doneCol}>
-                    
+
                     <DeleteButtonWithConfirm callBack={deleteItem} visible={hoveredLine === note._id}
                         confirmBtnText={note.title || 'запись' + '?'}
                         confirmTitle='Уверены, что хотите удалить '
@@ -68,7 +70,7 @@ export const ActionsItem: FC<IActionProps> = ({
                 <Result
                     result={note.result}
                     isDone={note.isDone}
-                    editResult={(v) => edit({ ...note, isDone: true, result: v  }) }
+                    editResult={(v) => edit({ ...note, isDone: true, result: v })}
                 />
             }
         </div>

@@ -48,13 +48,15 @@ const EditClientDataForm:FC<IProps> = ({
                     enableReinitialize={true}
                     onSubmit={(values, actions) => {
                         dispatch(fetchEditClient(client))
+                        console.log('values', values)
+                        console.log('client', client)
                         if (loadingStatus === LoadingStatusEnum.loaded) {
-                            actions.resetForm()
+                            // actions.resetForm()
                         }
                     }}>
 
                     {props => (
-                        <Form onChange={(e: React.ChangeEvent<HTMLFormElement>) => {
+                        <Form /* onChange={(e: React.ChangeEvent<HTMLFormElement>) => {
                             props.handleChange(e)
                             if (!e.target.name.includes('contactPersons')) {
                                 dispatch(syncEditClient({
@@ -62,7 +64,7 @@ const EditClientDataForm:FC<IProps> = ({
                                     values: (e.nativeEvent.target as HTMLFormElement).value
                                 }))
                             }
-                        }}>
+                        }}  */>
 
                             <div className={c.formBodyWrap}>
 
@@ -71,8 +73,12 @@ const EditClientDataForm:FC<IProps> = ({
                                 <div className={c.block}>
                                     <RadioBtnsGroup values={['юридическое лицо', 'индивидуальный предприниматель', 'физическое лицо']}
                                         chosenValue={props.values.form}
-                                        name='form' />
-                                </div>
+                                        name='form'
+                                        onChange={(v) => dispatch(syncEditClient({
+                                            _id: client._id, fieldName: 'form',
+                                            values: v
+                                        }))} />
+                                </div> 
 
                                 <div className={c.block}>
                                     {props.values.form === 'физическое лицо' ?

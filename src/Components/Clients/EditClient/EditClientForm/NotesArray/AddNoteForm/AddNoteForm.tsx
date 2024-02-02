@@ -24,7 +24,6 @@ interface IAddNoteFormProps {
     fullName: string
     authorId: string
     clientId: string
-    // setFormVisible: (arg: boolean) => void
     closeForm: () => void
     editibleNote?: IActivity
     fetchEdit?: (arg: IActivity) => void
@@ -56,7 +55,7 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
         editibleNote,
         type,
         fullName, authorId,
-        localDeadLine, 
+        localDeadLine,
         localStartTS,
     )
 
@@ -68,7 +67,7 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
                 enableReinitialize
                 onSubmit={(values, actions) => {
                     const payload = {
-                        ...values, 
+                        ...values,
                         isDone: false, clientId,
                         startTS: localStartTS,
                         deadLine: localDeadLine,

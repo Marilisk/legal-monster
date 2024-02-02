@@ -88,11 +88,11 @@ export type ClientsInitStateType = {
     clients: ClientsType
     loadedActivities: {[key: string]: IActivity[]}
     salesPipeline: SalesPhaseType[]
-    showNewClientPopup: boolean
+   /*  showNewClientPopup: boolean
     showEditClientPopup: {
         isOpened: boolean
         clientId: string 
-    }
+    } */
     openedFilter: string
     clientsFilters: {
         excludedPhases: number[]
@@ -109,7 +109,7 @@ export type PriorityType = 'high' | 'middle' | 'low'
 export interface IDadataCompany {
     value: string
     // unrestricted_value: string
-    data: {
+    data?: {
         address: {
             unrestricted_value: string
             data: {

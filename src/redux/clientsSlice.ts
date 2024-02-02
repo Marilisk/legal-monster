@@ -2,7 +2,7 @@ import { IActivity, IClient, ICreateClientPayload } from './../types/clientsType
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import instance from './api/api';
 import { LoadingStatusEnum } from '../types/userTypes';
-import { ClientsInitStateType } from '../types/clientsTypes';
+import { clientsInitialState } from './initialStates/clientState';
 
 
 export const fetchCreateClient = createAsyncThunk('clients/fetchCreateClient', async (params: ICreateClientPayload) => {
@@ -10,7 +10,9 @@ export const fetchCreateClient = createAsyncThunk('clients/fetchCreateClient', a
     return response.data;
 })
 
-export const fetchEditClient = createAsyncThunk('clients/fetchEditClient', async (params: IClient) => {
+export const fetchEditClient = createAsyncThunk('clients/fetchEditClient', 
+    async (params: Partial<IClient>) => {
+    console.log('params in Thunk', params)
     let response = await instance.post('/clients/edit', params);
     return response.data;
 })
@@ -65,60 +67,11 @@ export const fetchEditClientStaff = createAsyncThunk('clients/fetchEditClientSta
 })
 
 
-const initialState: ClientsInitStateType = {
-    clients: {
-        items: [],
-        status: LoadingStatusEnum.loaded,
-    },
-    loadedActivities: {},
-    salesPipeline: [
-        {
-            stepNumber: 1,
-            title: 'новый контакт',
-        },
-        {
-            stepNumber: 2,
-            title: 'телефонные переговоры',
-        },
-        {
-            stepNumber: 3,
-            title: 'надо направить предложение',
-        },
-        {
-            stepNumber: 4,
-            title: 'ждем ответа на предложение',
-        },
-        {
-            stepNumber: 5,
-            title: 'готовим договор',
-        },
-        {
-            stepNumber: 6,
-            title: 'договор подписан',
-        },
-
-    ],
-
-    showNewClientPopup: false,
-    showEditClientPopup: {
-        isOpened: false,
-        clientId: ''
-    },
-    openedFilter: '',
-    clientsFilters: {
-        excludedPhases: [],
-        period: {
-            start: 0, end: 0,
-        }
-    },
-    wasAnyClientFieldChangedFlag: false,
-}
-
 const clientsSlice = createSlice({
     name: 'clients',
-    initialState,
+    initialState: clientsInitialState,
     reducers: {
-        setShowNewClientPopup(state, action) {
+        /* setShowNewClientPopup(state, action) {
             state.showNewClientPopup = action.payload
         },
         setShowEditClientPopup(state, action: PayloadAction<{ isOpened: boolean, id: string }>) {
@@ -126,7 +79,7 @@ const clientsSlice = createSlice({
             if (action.payload.id) {
                 state.showEditClientPopup.clientId = action.payload.id
             }
-        },
+        }, */
         setClientsFilter(state, action: PayloadAction<{ property: 'excludedPhases' | 'period', values: any }>) {
             state.clientsFilters[action.payload.property] = action.payload.values
         },
@@ -157,7 +110,6 @@ const clientsSlice = createSlice({
             .addCase(fetchCreateClient.rejected, (state, action) => {
                 state.clients.status = LoadingStatusEnum.error;
             })
-
 
             .addCase(fetchGetClients.pending, (state) => {
                 state.clients.status = LoadingStatusEnum.loading
@@ -232,12 +184,6 @@ const clientsSlice = createSlice({
             })
             .addCase(fetchGetClientActivities.fulfilled, (state, action) => {
                 state.loadedActivities[action.payload.clientId] = action.payload.activities
-                /* const clientIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
-                if ((clientIndex || clientIndex === 0) && action.payload.activities) {
-                    state.clients.items[clientIndex].activities = action.payload.activities.not es
-                } else {
-                    state.clients.items[clientIndex].activities = []
-                } */
                 state.clients.status = LoadingStatusEnum.loaded;
                 state.wasAnyClientFieldChangedFlag = false
             })

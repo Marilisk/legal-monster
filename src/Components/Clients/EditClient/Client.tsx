@@ -10,6 +10,7 @@ import MainClientTab from './EditClientForm/MainClientTab/MainClientTab';
 import ClientCasesTab from './EditClientForm/ClientCasesTab/ClientCasesTab';
 import { LoadingDotsPreloader } from '../../../assets/LoadingDots/LoadingDotsPreloader';
 import { Paper, Typography } from '@mui/material';
+import PipeLineSelector from './EditClientForm/PipeLineSelector/PipeLineSelector';
 
 interface IClientProps {
     clientId: string
@@ -37,6 +38,10 @@ const Client: FC<IClientProps> = ({ clientId }: IClientProps) => {
         <Paper sx={{ mt: 2, mb: 2 }}>
             <Typography variant='h2'>{client.name}</Typography>
             <ContactsPresenter contacts={client.contactPersons} />
+
+            <PipeLineSelector value={client.phase.number}
+                clientId={client._id}
+            />
         </Paper>
         <div className={c.flexWrap}>
 
