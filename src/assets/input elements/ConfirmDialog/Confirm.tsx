@@ -10,9 +10,11 @@ interface IProps {
     text?: string
     action: () => void
     title?: string
+    confirmBtnText?: string
+    cancleBtnText?: string
 }
 
-const ConfirmDialog: FC<IProps> = ({ text, action, title }: IProps) => {
+const ConfirmDialog: FC<IProps> = ({ text, action, title, confirmBtnText, cancleBtnText }: IProps) => {
 
     const {closeModal} = useContext(CloseModalContext)
 
@@ -26,11 +28,11 @@ const ConfirmDialog: FC<IProps> = ({ text, action, title }: IProps) => {
                     action()
                     closeModal()
                 }} >
-                <div>да</div>
+                <div>{confirmBtnText || 'да' }</div>
             </Button>
 
             <Button callBack={closeModal} >
-                <div>отмена</div>
+                <div>{cancleBtnText || 'отмена' }</div>
             </Button>
             </div>
         </div>

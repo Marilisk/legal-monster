@@ -2,7 +2,6 @@ import { FC } from "react";
 import c from './ClientLine.module.scss';
 import { brieflyformatDate } from "../../../assets/functions/formatDate";
 import { NoBorderButton } from "../../../assets/input elements/NoBorderButton/NoBorderButton";
-import { useAppDispatch } from "../../../redux/hooks";
 import { IClient, SalesPhaseType } from "../../../types/clientsTypes";
 import { NavLink } from "react-router-dom";
 
@@ -20,8 +19,6 @@ export const ClientLine: FC<IClientLineProps> = ({ client, salesphase }: IClient
         closestEvent = new Date(Math.min(...timestamps))
     }
 
-    console.log('client', client)
-    console.log('salesphase', salesphase)
 
     return <>
         <NavLink to={`/client/${client._id}`}>

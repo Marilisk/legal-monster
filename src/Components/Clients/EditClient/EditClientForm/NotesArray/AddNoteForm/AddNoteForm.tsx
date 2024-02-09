@@ -1,6 +1,5 @@
-import { FC, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { ClientActivityType, IActivity, PriorityType } from '../../../../../../types/clientsTypes';
-import { Formik, Form } from 'formik';
 import { useAppDispatch } from '../../../../../../redux/hooks';
 import { fetchCreateNote } from '../../../../../../redux/clientsSlice';
 import FormTextField from '../../../../../../assets/input elements/formTextField/FormTextField';
@@ -12,13 +11,12 @@ import { formatDate } from '../../../../../../assets/functions/formatDate';
 import DateTimePicker from '../../../../../../assets/input elements/DateTimePicker/DateTimePicker';
 import { handleOpenDatePicker } from '../../../../../Calendar/AddEventForm/AddEventForm';
 import { DateRangeIcon } from '../../../../../../assets/Icons/DateRangeIcon';
-import { spotIfAnyFormFieldChanged } from '../../../../../../assets/functions/spotIfAnyFieldChanged';
 import Selector from '../../../../../../assets/input elements/Selector/Selector';
 import { useGetActivityTitleFromType, getPriorityText } from '../getPriorityText';
 import { PriorityIcon } from '../../../../../../assets/Icons/PriorityIcon';
 import CheckBox from '../../../../../../assets/input elements/checkbox/CheckBox';
 import { Typography } from '@mui/material';
-import { useGetInitialValues, useGetPickerValues } from './hooks';
+import { ChangeNoteFormEvent, useGetInitialValues, useGetPickerValues } from './hooks';
 
 interface IAddNoteFormProps {
     fullName: string
@@ -42,7 +40,6 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
 }: IAddNoteFormProps) => {
 
     const dispatch = useAppDispatch()
-    const [wasAnyFieldChangedFlag, setIfAnyFieldChangedFlag] = useState(false)
 
     const {
         localDeadLine,
@@ -59,85 +56,88 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
         localStartTS,
     )
 
-    const assets = useGetActivityTitleFromType(editibleNote?.type || type)
+    const [values, setValues] = useState(initialValues)
+    
+    const [wasFormTouched, setFormWasTouched] = useState(false)
+
+    useEffect(() => {
+        setValues(initialValues)
+    }, [ editibleNote?._id, type ])
+
+    const handleChange = (line: ChangeNoteFormEvent) => {
+        if (!wasFormTouched) setFormWasTouched(true)
+        setValues({ ...values, [line.field]: line.value })
+    }
+
+    const handleSubmit = () => {
+        const payload = {
+            ...values,
+            isDone: false, clientId,
+            startTS: localStartTS,
+            deadLine: localDeadLine,
+        } as IActivity
+        if (editibleNote && fetchEdit) {
+            fetchEdit(payload)
+        } else {
+            dispatch(fetchCreateNote(payload))
+        }
+        setValues(initialValues)
+        closeForm()
+    }
+
+    const assets = useGetActivityTitleFromType(values.type)
 
     return (
         <div className={c.wrap} onClick={(e) => handleOpenDatePicker(e, dispatch)}>
-            <Formik initialValues={initialValues}
-                enableReinitialize
-                onSubmit={(values, actions) => {
-                    const payload = {
-                        ...values,
-                        isDone: false, clientId,
-                        startTS: localStartTS,
-                        deadLine: localDeadLine,
-                    } as IActivity
-                    if (editibleNote && fetchEdit) {
-                        fetchEdit(payload)
-                    } else {
-                        dispatch(fetchCreateNote(payload))
-                    }
-                    actions.resetForm()
-                    closeForm()
-                }} >
+            <div className={c.header}>
+                {!editibleNote && <Typography variant='h2'>
+                    {'Нов' + assets.ending} {assets.text} :
+                </Typography>}
+                <CancelButton callBack={closeForm} />
+            </div>
 
-                {({ values, errors, touched, setFieldValue, initialValues }) => (
-                    <Form>
-                        <div className={c.header}>
-                            {!editibleNote && <Typography variant='h2'>
-                                {'Нов' + assets.ending} {assets.text} :
-                            </Typography>}
-                            <CancelButton callBack={closeForm} />
-                            type {type}
-                        </div>
+            {(values.type === 'meeting' || values.type === 'court') && <div>
+                <CheckBox
+                    callback={() => {
+                        const newType = values.type === 'court' ? 'meeting' : 'court'
+                        handleChange({ field: 'type', value: newType })
+                    }}
+                    checked={values.type === 'court'} />
+                <span>судебное заседание</span>
+            </div>}
 
-                        {(values.type === 'meeting' || values.type === 'court') && <div>
-                            <CheckBox
-                                callback={() => {
-                                    const newType = values.type === 'court' ? 'meeting' : 'court'
-                                    setFieldValue('type', newType)
-                                }}
-                                checked={values.type === 'court'} />
-                            <span>судебное заседание</span>
-                        </div>}
+            <div className={c.firstLine}>
 
-                        <div className={c.firstLine}>
+                <FormTextField value={values.title}
+                    label={values.type !== 'note' ? 'заголовок' : undefined}
+                    validate={(v) => basicLengthValidate(v, 3)}
+                    onChange={(v) => handleChange({ field: 'title', value: v })}
+                    multiline={values.type === 'note'}
+                />
+                {
+                    values.type !== 'note' &&
+                    <Selector title='приоритет'
+                        chosenValue={{ systemValue: values.priority, title: getPriorityText(values.priority as PriorityType).priorityText }}
+                        values={[{ title: 'высокий', systemValue: 'high' }, { title: 'средний', systemValue: 'middle' }, { title: 'низкий', systemValue: 'low' },]}
+                        onChange={(v) => handleChange({ field: 'priority', value: v })}
+                        icon={<PriorityIcon size='26px' />}
+                    />
+                }
+            </div>
 
-                            <FormTextField value={values.title}
-                                label={values.type !== 'note' ? 'заголовок' : undefined}
-                                name='title' error={errors.title} touched={touched.title}
-                                validate={(v) => basicLengthValidate(v, 3)} />
+            {values.type !== 'note' &&
+                <FormTextField
+                    value={values.text}
+                    label='описание'
+                    onChange={(v) => handleChange({ field: 'text', value: v })}
+                />}
 
-                            {values.type !== 'note' &&
-                                <Selector title='приоритет' chosenValue={{ systemValue: values.priority, title: getPriorityText(values.priority as PriorityType).priorityText }}
-                                    values={[{ title: 'высокий', systemValue: 'high' }, { title: 'средний', systemValue: 'middle' }, { title: 'низкий', systemValue: 'low' },]}
-                                    onChange={(value: string) => setFieldValue('priority', value)}
-                                    icon={<PriorityIcon size='26px' />} />
-                            }
-
-                        </div>
-
-                        {values.type !== 'note' &&
-                            <FormTextField value={values.text}
-                                label='описание'
-                                name='text' />}
-
-                        <Button type='submit'
-                            visible={spotIfAnyFormFieldChanged(initialValues, values, wasAnyFieldChangedFlag, setIfAnyFieldChangedFlag)}
-                            disabled={Boolean(Object.keys(errors).length)} >
-                            <span>сохранить</span>
-                        </Button>
-
-                    </Form>
-                )}
-            </Formik>
-
-            {(initialValues.type === 'meeting' || initialValues.type === 'task' || initialValues.type === 'court') &&
+            {(values.type === 'meeting' || values.type === 'task' || values.type === 'court') &&
                 <>
                     <Typography variant='h3' >{assets.datesTitle}</Typography>
                     <div className={c.lineWrap}>
 
-                        {type === 'meeting' &&
+                        {values.type === 'meeting' &&
                             <>
                                 <div className={c.pickerWrap} id="startTS">
                                     <label className={c.label}>
@@ -145,7 +145,7 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
                                         {localDeadLine && formatDate(new Date(localStartTS))}
                                     </label>
                                     <DateTimePicker currentDate={new Date(localStartTS)}
-                                        setValue={(f, v) => setStartTS(v.getTime())}
+                                        setValue={(_, v) => setStartTS(v.getTime())}
                                         fieldName='startTS'
                                         title='начало'
                                         top={-390}
@@ -156,16 +156,14 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
                         }
 
                         <div className={c.pickerWrap} id="deadLine">
-
                             <label className={c.label}>
                                 <DateRangeIcon />
                                 {localDeadLine && formatDate(new Date(localDeadLine))}
                             </label>
-
                             <DateTimePicker currentDate={new Date(localDeadLine)}
-                                setValue={(f, v) => setDeadLine(v.getTime())}
+                                setValue={(_, v) => setDeadLine(v.getTime())}
                                 fieldName='deadLine'
-                                title={initialValues.type === 'task' ? 'срок' : 'завершение'}
+                                title={values.type === 'task' ? 'срок' : 'завершение'}
                                 top={-420}
                             />
                         </div>
@@ -173,8 +171,15 @@ const AddNoteForm: FC<IAddNoteFormProps> = ({
                 </>
             }
 
+            <Button type='submit'
+                visible={wasFormTouched}
+                callBack={handleSubmit}
+            // disabled={Boolean(Object.keys(errors).length)}
+            >
+                сохранить
+            </Button>
         </div>
     );
 };
 
-export default AddNoteForm;
+export default memo(AddNoteForm);

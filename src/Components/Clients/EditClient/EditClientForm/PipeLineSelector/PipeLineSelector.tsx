@@ -8,10 +8,14 @@ import { QontoConnector, stepSx } from './PipeLineSelector.styled';
 
 interface IPipeLineSelectorProps {
     value: number
-    clientId: string
+    clientId?: string
+    onChange?: (phase: {
+        number: number,
+        assignDateTimestamp: number
+    }) => void
 }
 
-const PipeLineSelector: FC<IPipeLineSelectorProps> = ({ value, clientId }: IPipeLineSelectorProps) => {
+const PipeLineSelector: FC<IPipeLineSelectorProps> = ({ value, clientId, onChange }: IPipeLineSelectorProps) => {
 
     // const pipeline = useAppSelector(s => s.clients.salesPipeline)
 
@@ -22,13 +26,18 @@ const PipeLineSelector: FC<IPipeLineSelectorProps> = ({ value, clientId }: IPipe
     const dispatch = useAppDispatch()
 
     const setValue = (stepNumber: number) => {
-        dispatch(fetchEditClient({
-            phase: {
-                number: stepNumber,
-                assignDateTimestamp: Date.now()
-            },
-            _id: clientId,
-        }))
+        const payload = {
+            number: stepNumber,
+            assignDateTimestamp: Date.now()
+        }
+        if (!clientId && onChange) {
+            onChange(payload)
+        } else {
+            dispatch(fetchEditClient({
+                phase: payload,
+                _id: clientId,
+            }))
+        }
     }
 
     return (

@@ -11,19 +11,6 @@ const DoneButton: FC<IProps> = ({
   callBack, disabled = false, visible = true, color, tooltipText,
 }: IProps) => {
 
-  /*   const handleClick = () => {
-      if (confirmQuestion) {
-        callBack && createModal({
-          component: <ConfirmDialog
-            action={callBack}
-            text={confirmQuestion}
-          />
-        })
-      } else {
-        callBack && callBack()
-      }
-    } */
-
 
   return <Tooltip title={tooltipText} >
     <IconButton size="medium"

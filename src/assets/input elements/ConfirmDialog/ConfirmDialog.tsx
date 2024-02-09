@@ -30,9 +30,10 @@ function withConfirmDialog<IButtonProps>(Component: ComponentType<IButtonProps>)
     async function onClickButton(e: any) {
         try {
           await openConfirm({
-            text: confirmBtnText,
-            confirmTitle: confirmTitle,
+            text,
+            confirmTitle,
             confirmBtnText,
+            cancleBtnText,
             callBack: callBack,
           })
         } catch (error) {

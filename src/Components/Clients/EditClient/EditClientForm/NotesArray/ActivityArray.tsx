@@ -1,23 +1,25 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import c from './ActivityArray.module.scss'
 import { ClientActivityType, IActivity } from '../../../../../types/clientsTypes';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import MeetingItem from './MeetingItem/MeetingItem';
 import AddNoteForm from './AddNoteForm/AddNoteForm';
-import { NoBorderButton } from '../../../../../assets/input elements/NoBorderButton/NoBorderButton';
 import { ActionsItem } from './LastActionItem/ActionItem';
-import { fetchDeleteNote, fetchEditNote, syncEditClient } from '../../../../../redux/clientsSlice';
+import { fetchDeleteNote, fetchEditNote } from '../../../../../redux/clientsSlice';
 import AddActivityBtns from './AddActivityBtns/AddActivityBtns';
-import { Collapse, Divider, Fade, Typography } from '@mui/material';
+import { Collapse, Divider, Typography } from '@mui/material';
+import { LoadingDots } from '../../../../../assets/LoadingDots/LoadingDots';
+
 
 interface IActivityArrayProps {
     array: IActivity[] | undefined
     title: string
     clientId: string
+    loadingActivities: string[]
 }
 
 
-const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IActivityArrayProps) => {
+const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId, loadingActivities }: IActivityArrayProps) => {
 
     const authUser = useAppSelector(s => s.auth.loginData.data)
     const fullName = authUser?.fullName
@@ -48,10 +50,12 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
         setEditibleNoteItem(undefined)
     }
 
+    if (!array) return <Typography variant='h3'>У этого клиента пока нет активностей</Typography>
     if (!fullName || !authorId) return null
 
+
     // ортируем чтобы первыми в массиве были самые ранние события
-    const sortedArray = [...array || []].sort((note, nextNote) => note.deadLine - nextNote.deadLine)
+    const sortedArray = [...array ].sort((note, nextNote) => note.createTimeStamp - nextNote.createTimeStamp)
     const currentItemIdx = 0 // показываем в таблице куррент айтем самое раннее событие
 
     const doneArray = sortedArray.filter(el => el.isDone)
@@ -66,23 +70,26 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
                 setFormActivityType={setFormActivityType} />
 
             <Collapse in={isFormVisible && !editibleNote}>
-                <div>
-                    <AddNoteForm fullName={fullName} authorId={authorId}
-                        clientId={clientId}
-                        closeForm={closeForm}
-                        type={formActivityType} />
-                </div>
+                { isFormVisible && !editibleNote  &&
+                    <div>
+                        <AddNoteForm fullName={fullName} authorId={authorId}
+                            clientId={clientId}
+                            closeForm={closeForm}
+                            type={formActivityType} />
+                    </div> }
             </Collapse>
 
             {!!todoArray.length &&
                 <div className={c.block} >
 
-                    <Typography variant='h2'>Предстоящие действия</Typography>
-
                     {todoArray.map((el, i) => {
 
+                        const isLoading = loadingActivities.includes(el._id) 
+
+                        if ( isLoading) return <LoadingDots size='small' />
+
                         return <div key={el._id}>
-                            
+                            {editibleNote?._id === el._id &&
                                 <Collapse in={editibleNote?._id === el._id}>
                                     <div>
                                         <AddNoteForm fullName={fullName} authorId={authorId}
@@ -93,7 +100,7 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
                                             type={formActivityType} />
                                     </div>
                                 </Collapse>
-                            
+                            }
 
                             {el.type === 'court' || el.type === 'meeting' ?
                                 <MeetingItem key={`${el._id}${i}-m`}
@@ -115,9 +122,7 @@ const ActivityArray: FC<IActivityArrayProps> = ({ array, title, clientId }: IAct
                                 />
                             }
                         </div>
-                    }
-
-                    )}
+                    })}
                 </div>
             }
 

@@ -2,18 +2,17 @@
 
 .btn,
 .hiddenBtn {
-    padding: 4px 0;
+    /* padding: 4px 0;
     border-radius: 4px;
     //height: 30px;
     transition: all 200ms linear;
     color: $active-green;
     display: flex;
     align-items: center;
-    //border: 1px solid orange;
     background-color: transparent;
     & > div {
         margin: 0 auto;
-    }
+    } */
 
     &:hover {
         background: $light-gray;

@@ -1,6 +1,8 @@
 import { FC } from "react"
-import c from './CancelButton.module.scss'
 import { CrossIcon } from "../../Icons/CrossIcon/CrossIcon"
+import { IconButton } from "@mui/material"
+import { appearingBtnStyles } from "../DeleteButton/DeleteButton"
+import withConfirmDialog from "../ConfirmDialog/ConfirmDialog"
 
 interface IButtonProps {
     callBack?: () => void
@@ -10,11 +12,17 @@ interface IButtonProps {
 
 export const CancelButton: FC<IButtonProps> = ({ callBack, disabled = false, visible = true }: IButtonProps) => {
 
-    return <button className={visible ? c.btn : c.hiddenBtn}
+    return <IconButton
+        sx={() => appearingBtnStyles(visible)}
         disabled={disabled}
         type='button'
         onClick={callBack} >
-            <CrossIcon size="22px" color="#C8CACA" />
-    </button>
+        <CrossIcon size="22px" color="#C8CACA" />
+    </IconButton>
 
 }
+
+export const CancelButtonWithConfirm = withConfirmDialog(CancelButton)
+
+
+

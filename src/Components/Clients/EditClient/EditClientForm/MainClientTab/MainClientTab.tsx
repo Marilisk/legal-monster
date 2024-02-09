@@ -1,8 +1,10 @@
-import { FC, useEffect } from 'react'
+import { FC, /* startTransition,  */useEffect, useTransition } from 'react'
 import { IClient } from '../../../../../types/clientsTypes'
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks'
 import ActivityArray from '../NotesArray/ActivityArray'
 import { fetchGetClientActivities } from '../../../../../redux/clientsSlice'
+import { LoadingStatusEnum } from '../../../../../types/userTypes'
+import { LoadingDots } from '../../../../../assets/LoadingDots/LoadingDots'
 
 interface IMainClientTabProps {
     client: IClient
@@ -13,17 +15,31 @@ const MainClientTab: FC<IMainClientTabProps> = ({
 }: IMainClientTabProps) => {
 
     const dispatch = useAppDispatch()
-    const activityArray = useAppSelector( s => s.clients.loadedActivities[client._id])
+    const activities = useAppSelector(s => s.clients.loadedActivities[client._id])
+    const activityArray = activities?.items
+    const loadingActivities = activities?.itemsInLoadingStatus
+    const clientActivitiesLoadingStatus = useAppSelector(s => s.clients.loadedActivities[client._id]?.status)
+
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         if (!activityArray) {
-            dispatch(fetchGetClientActivities(client._id))
+            startTransition(() => {
+                dispatch(fetchGetClientActivities(client._id))
+            })
         }
     }, [client._id])
 
+    if (clientActivitiesLoadingStatus === LoadingStatusEnum.loading) return <LoadingDots />
+    if (!activityArray || isPending) return null
 
     return (
-        <ActivityArray array={activityArray} title='Активность' clientId={client._id} />
+        <ActivityArray
+            array={activityArray}
+            title='Активность'
+            clientId={client._id}
+            loadingActivities={loadingActivities}
+        />
     )
 }
 

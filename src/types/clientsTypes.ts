@@ -40,6 +40,8 @@ export interface IClient {
     createdAt: string
 }
 
+// export type ClientFieldsType = keyof IClient
+
 export type ClientActivityType = 'note' | 'task' | 'meeting' | 'document' | 'court'
 export interface IActivity {
     author: {
@@ -59,7 +61,6 @@ export interface IActivity {
     place?: string
     startTS?: number,
     createdAt: string
-    // endTS?: number,
 }
 
 export interface IContactPerson {
@@ -86,7 +87,11 @@ export type SalesPhaseType = {
 
 export type ClientsInitStateType = {
     clients: ClientsType
-    loadedActivities: {[key: string]: IActivity[]}
+    loadedActivities: {[key: string]: {
+        items: IActivity[],
+        status: LoadingStatusEnum
+        itemsInLoadingStatus: string[]
+    }}
     salesPipeline: SalesPhaseType[]
    /*  showNewClientPopup: boolean
     showEditClientPopup: {

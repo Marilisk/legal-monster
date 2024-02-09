@@ -2,12 +2,12 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { StyledTextField } from '../input elements/formTextField/FormTextField'
 import dadataApi from '../../redux/api/dadataApi'
 import { Autocomplete, MenuItem } from '@mui/material'
-import { IDadataCompany } from '../../types/clientsTypes'
+import { ClientFieldsType, IDadataCompany } from '../../types/clientsTypes'
 
 interface IProps {
     value: string
     name: string
-    setFieldValue: (f: string, v: string) => void
+    setFieldValue: (f: ClientFieldsType, v: string) => void
 }
 
 const CompanySuggester: FC<IProps> = ({
@@ -44,8 +44,7 @@ const CompanySuggester: FC<IProps> = ({
     const onChange = (newValue: IDadataCompany | null) => {
         
         if (newValue) {
-            console.log('newValue', newValue)
-            
+            // console.log('newValue', newValue)
             newValue?.value && setFieldValue('name', newValue?.value)
             newValue?.data?.inn && setFieldValue('INNnumber', newValue?.data.inn)
         }

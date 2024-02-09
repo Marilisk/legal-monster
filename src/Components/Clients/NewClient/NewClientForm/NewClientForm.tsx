@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import { Form, Formik } from 'formik';
+import { FC, useState } from 'react';
 import { useAppDispatch } from '../../../../redux/hooks';
 import { RadioBtnsGroup } from '../../../../assets/input elements/RadioBtnsGroup/RadioBtnsGroup';
 import FormTextField from '../../../../assets/input elements/formTextField/FormTextField';
@@ -10,13 +9,13 @@ import { basicLengthValidate, flInnValidate, ulInnValidate } from '../../../Cale
 import { fetchCreateClient } from '../../../../redux/clientsSlice';
 import InputMask from 'react-input-mask';
 import PipeLineSelector from '../../EditClient/EditClientForm/PipeLineSelector/PipeLineSelector';
+import { Controller, useForm } from "react-hook-form";
 
-
-interface INewClientFromProps {
-    
+interface INewClientFrom {
+    test?: string
 }
 
-export const NewClientForm: FC<INewClientFromProps> = ({ }: INewClientFromProps) => {
+export const NewClientForm: FC<INewClientFrom> = ({ test }: INewClientFrom) => {
 
     const dispatch = useAppDispatch()
 
@@ -28,7 +27,10 @@ export const NewClientForm: FC<INewClientFromProps> = ({ }: INewClientFromProps)
         contactPersonPhone: '',
         contactPersonJob: '',
         contactPersonNote: '',
-        phase: 1,
+        phase: {
+            number: 1,
+            assignDateTimestamp: 0,
+        },
         managers: [],
         lawyers: [],
         contracts: [],
@@ -36,90 +38,133 @@ export const NewClientForm: FC<INewClientFromProps> = ({ }: INewClientFromProps)
         events: [],
     }
 
+    type ValuesType = typeof initialValues
+
+    const [values, setValues] = useState(initialValues)
+
+    const handleChange = (
+        field: keyof ValuesType,
+        value: ValuesType[keyof ValuesType]
+    ) => {
+        setValues({
+            ...values, [field]: value,
+        })
+
+    }
+
+    const onSubmit = (values: ValuesType) => {
+        const payload = {
+            name: values.name,
+            form: values.form,
+            INNnumber: values.INNnumber,
+            contactPersons: [{
+                name: values.contactPersonName,
+                phone: values.contactPersonPhone,
+                job: values.contactPersonJob,
+                note: values.contactPersonNote,
+            }],
+            phase: { number: values.phase.number, assignDateTimestamp: values.phase.assignDateTimestamp },
+            managers: [],
+            lawyers: [],
+            contracts: [],
+            projects: [],
+            events: [],
+            notes: [],
+        }
+        dispatch(fetchCreateClient(payload))
+        setValues(initialValues)
+    }
+
+    const { register, handleSubmit, watch, formState: { errors }, control } = useForm({
+        defaultValues: initialValues,
+
+    })
+
+
     return <div className={c.wrap}>
+        <form onSubmit={handleSubmit((data) => {
+            console.log('onSubmit', data)
+        })}>
+            <div className={c.formBodyWrap}>
 
-        <Formik initialValues={initialValues}
-            enableReinitialize={true}
-            onSubmit={(values, actions) => {
-                const payload = {
-                    name: values.name,
-                    form: values.form,
-                    INNnumber: values.INNnumber,
-                    contactPersons: [{
-                        name: values.contactPersonName,
-                        phone: values.contactPersonPhone,
-                        job: values.contactPersonJob,
-                        note: values.contactPersonNote,
-                    }],
-                    phase: {number: values.phase,},
-                    managers: [],
-                    lawyers: [],
-                    contracts: [],
-                    projects: [],
-                    events: [],
-                    notes: [],
+
+                <input {...register('name')} />
+
+                <RadioBtnsGroup values={['юридическое лицо', 'индивидуальный предприниматель', 'физическое лицо']}
+                    chosenValue={values.form}
+                    name='form'
+                    onChange={(v) => handleChange('form', v)}
+                />
+
+                {values.form !== 'физическое лицо' &&
+                    <>
+
+                        <Controller
+                            control={control}
+                            name='INNnumber'
+                            render={({ field }) => <FormTextField
+                                label='ИНН'
+                                {...field}
+
+                            // value={values.INNnumber} 
+                            // validate={values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
+                            // onChange={(v) => handleChange('INNnumber', v)}
+                            />}
+                        />
+                        {/* <FormTextField name="INNnumber" value={values.INNnumber} label='ИНН'
+                            // error={errors.INNnumber}
+                            validate={values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
+                            // touched={touched.INNnumber}
+                            onChange={(v) => handleChange('INNnumber', v)}
+                        /> */}
+                    </>
                 }
-                dispatch(fetchCreateClient(payload))
-                actions.resetForm()
-            }}>
 
-            {props => (
-                <Form >
-                    <div className={c.formBodyWrap}>
+                <FormTextField name="name" value={values.name}
+                    label={values.form === 'физическое лицо' ? 'имя' : 'наименование'}
+                    // error={errors.name}
+                    validate={(value) => basicLengthValidate(value, 3)}
+                    // touched={touched.name}
+                    onChange={(v) => handleChange('form', v)}
+                />
 
-                        <RadioBtnsGroup values={['юридическое лицо', 'индивидуальный предприниматель', 'физическое лицо']}
-                            chosenValue={props.values.form}
-                            name='form' />
+                {values.form !== 'физическое лицо' &&
+                    <>
+                        <h2>Контактное лицо:</h2>
+                        <FormTextField
+                            value={values.contactPersonName}
+                            label='имя'
+                            onChange={(v) => handleChange('contactPersonName', v)}
+                        />
+                    </>
+                }
 
-                        {props.values.form !== 'физическое лицо' &&
-                            <FormTextField name="INNnumber" value={props.values.INNnumber} label='ИНН'
-                                error={props.errors.INNnumber}
-                                validate={props.values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
-                                touched={props.touched.INNnumber} />
-                        }
+                <div className={impc.lineWrap}>
+                    <label>
+                        <InputMask mask='+7 (999) 999 99 99' maskChar='*'
+                            onChange={(e) => handleChange('contactPersonPhone', e.target.value)}
+                            name='contactPersonPhone'
+                            value={values.contactPersonPhone} />
+                        <span className={values.contactPersonPhone.length > 0 ? impc.hangedLabel : undefined} >
+                            телефон
+                        </span>
+                    </label>
+                </div>
 
-                        <FormTextField name="name" value={props.values.name}
-                            label={props.values.form === 'физическое лицо' ? 'имя' : 'наименование'}
-                            error={props.errors.name}
-                            validate={(value) => basicLengthValidate(value, 3)}
-                            touched={props.touched.name} />
+                {/* сюда еще селект с менеджерами и юристами надо */}
+                <PipeLineSelector value={values.phase.number}
+                    // clientId={null}
+                    onChange={(v) => handleChange('phase', v)}
+                />
 
-                        {props.values.form !== 'физическое лицо' &&
-                            <>
-                                <h2>Контактное лицо:</h2>
-                                <FormTextField name="contactPersonName" value={props.values.contactPersonName} label='имя' />
-                            </>
-                        }
-                     
-                        <div className={impc.lineWrap}>
-                            <label>
-                                <InputMask mask='+7 (999) 999 99 99' maskChar='*'
-                                    onChange={props.handleChange}
-                                    name='contactPersonPhone'
-                                    value={props.values.contactPersonPhone} />
-                                <span className={props.values.contactPersonPhone.length > 0 ? impc.hangedLabel : undefined} >
-                                    телефон
-                                </span>
-                            </label>
-                        </div>
+                {/* и селект с свыбором ответственного сотрудника если роль руководителя */}
 
-                        {/* сюда еще селект с менеджерами и юристами надо */}
-                        <PipeLineSelector value={props.values.phase}
-                            setFieldValue={(value: number) => props.setFieldValue('phase', value)} />
-
-                        {/* и селект с свыбором ответственного сотрудника если роль руководителя */}
-
-                        <div className={c.btnsContainer}>
-                            <Button type="submit"/*  disabled={Boolean(props.errors)} */>
-                                <span>добавить</span>
-                            </Button>
-                        </div>
-                    </div>
-
-                </Form>
-            )}
-
-        </Formik>
-
+                <div className={c.btnsContainer}>
+                    <Button type="submit"/*  disabled={Boolean(errors)} */>
+                        <span>добавить</span>
+                    </Button>
+                </div>
+            </div>
+        </form>
     </div>
 }

@@ -54,8 +54,8 @@ export const ActionsItem: FC<IActionProps> = ({
                 <div className={c.doneCol}>
 
                     <DeleteButtonWithConfirm callBack={deleteItem} visible={hoveredLine === note._id}
-                        confirmBtnText={note.title || 'запись' + '?'}
-                        confirmTitle='Уверены, что хотите удалить '
+                        confirmBtnText='удалить'
+                        confirmTitle='Точно удаляем ?'
                     />
                     {
                         setEditableNote &&

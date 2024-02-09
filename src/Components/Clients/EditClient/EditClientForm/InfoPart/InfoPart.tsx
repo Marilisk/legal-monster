@@ -3,8 +3,7 @@ import c from './InfoPart.module.scss'
 import { IClient } from '../../../../../types/clientsTypes'
 import { EditIcon } from '../../../../../assets/Icons/EditIcon'
 import { formatDate } from '../../../../../assets/functions/formatDate'
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks'
-import { setWasAnyClientFieldChangedFlag } from '../../../../../redux/clientsSlice'
+import { useAppSelector } from '../../../../../redux/hooks'
 import { LoadingStatusEnum } from '../../../../../types/userTypes'
 import StaffGroup from '../StaffGroup/StaffGroup'
 import { Collapse, IconButton, Paper } from '@mui/material'
@@ -12,6 +11,7 @@ import { CloseButton } from '../../../../../assets/input elements/CloseButton/Cl
 import ContactsList from './components/ContactsList'
 import { selectIsOwner } from '../../../../../redux/authSlice'
 import EditClientDataForm from './components/EditClientDataForm'
+import ContactsFieldArray from '../../../../../assets/input elements/сreateFieldArray/ContactsFieldArray'
 
 
 
@@ -21,7 +21,6 @@ interface IInfoPartProps {
 
 const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
 
-    const dispatch = useAppDispatch()
     const [editMode, setEditMode] = useState(false)
     const isOwner = useAppSelector(selectIsOwner)
 
@@ -41,10 +40,6 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
         wereLawyersLoaded: s.staff.lawyers.status === LoadingStatusEnum.loaded,
     }))
 
-
-    const setIfAnyFieldChangedFlag = (v: boolean) => {
-        dispatch(setWasAnyClientFieldChangedFlag(v))
-    }
 
     return (
         <div className={c.leftInfoPart} >
@@ -66,11 +61,19 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
                     <EditClientDataForm
                         client={client}
                         wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
-                        setIfAnyFieldChangedFlag={setIfAnyFieldChangedFlag}
                     />
                 </Collapse>
 
             </Paper>
+
+            {client.form !== 'физическое лицо' &&
+                <ContactsFieldArray
+                    clientId={client._id}
+                    array={client.contactPersons}
+                    title='Контакты'
+                    clientContactsLength={client.contactPersons.length}
+                />
+            }
 
             {wereManagersLoaded && (canChangeResponsibleUser || isOwner)
                 &&

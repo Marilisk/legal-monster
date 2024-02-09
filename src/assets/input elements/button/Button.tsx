@@ -8,7 +8,8 @@ interface IButtonProps extends PropsWithChildren {
     visible?: boolean
 }
 
-export const Button: FC<IButtonProps> = ({ type = 'button',
+export const Button: FC<IButtonProps> = ({ 
+    type = 'button',
     callBack,
     children,
     disabled,

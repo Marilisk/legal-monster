@@ -1,6 +1,12 @@
 import { ClientsInitStateType } from "../../types/clientsTypes";
 import { LoadingStatusEnum } from "../../types/userTypes";
 
+export interface IEditStaffPayload {
+    clientId: string,
+    newValuesArr: string[],
+    staffName: 'lawyers' | 'managers'
+}
+
 
 export const clientsInitialState: ClientsInitStateType = {
     clients: {

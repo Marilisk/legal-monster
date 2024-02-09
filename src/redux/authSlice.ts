@@ -68,6 +68,7 @@ const authSlice = createSlice({
             .addCase(fetchAuth.fulfilled, (state, action) => {
                 state.loginData.status = LoadingStatusEnum.loaded;
                 state.loginData.data = action.payload.user;
+                state.loginData.serverMessage = ''
             })
             .addCase(fetchAuth.rejected, (state, action) => {
                 state.loginData.status = LoadingStatusEnum.error;

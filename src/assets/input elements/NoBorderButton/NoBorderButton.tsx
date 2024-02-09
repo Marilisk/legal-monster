@@ -1,11 +1,11 @@
-import { FC } from "react"
+import { FC, ReactNode } from "react"
 import c from './NoBorderButton.module.scss'
 import { Button } from "@mui/material"
 
 interface IButtonProps {
     type: 'submit' | 'button'
     callBack?: () => void
-    children: JSX.Element
+    children: JSX.Element | ReactNode
     disabled?: boolean
     visible?: boolean
     small?: boolean

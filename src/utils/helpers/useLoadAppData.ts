@@ -18,7 +18,6 @@ export const useLoadAppData = () => {
 
     useEffect(() => {
         if ((isOwner || canChangeResponsibleUser)) {
-            console.log('in useeff')
             managersEmpty && dispatch(fetchGetMyStaff('manager'))
             lawyersEmpty && dispatch(fetchGetMyStaff('lawyer'))
         }

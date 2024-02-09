@@ -1,89 +1,131 @@
 import { useState } from 'react';
-import { Field, FieldArray } from "formik"
+import { Field, FieldArray, Form, Formik } from "formik"
 import c from './ContactsFieldArray.module.scss';
 import { IContactPerson } from '../../../types/clientsTypes';
 import ReactInputMask from 'react-input-mask';
 import { NoBorderButton } from '../NoBorderButton/NoBorderButton';
 import { DoneIcon } from '../../Icons/DoneIcon';
 import { Button } from '../button/Button';
-import { CancelButton } from '../CancelButton/CancelButton';
+import { CancelButton, CancelButtonWithConfirm } from '../CancelButton/CancelButton';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { fetchEditClient, setWasAnyClientFieldChangedFlag, syncEditClient } from '../../../redux/clientsSlice';
+import { Box, Paper } from '@mui/material';
+import DoneButton from '../DoneButton/DoneButton';
+import { appearingBtnStyles } from '../DeleteButton/DeleteButton';
 
 interface ICreateFieldArrayProps {
-    name: string
     array: IContactPerson[]
     title: string
-    syncEdit: (arg: IContactPerson[]) => void
     clientContactsLength: number
+    clientId: string
 }
 
 
-const  ContactsFieldArray =  ({ name, array, title, syncEdit, clientContactsLength }: ICreateFieldArrayProps) => {
+const ContactsFieldArray = ({ array, title, clientId, clientContactsLength }: ICreateFieldArrayProps) => {
+
+    const wasAnyFieldChangedFlag = useAppSelector(s => s.clients.wasAnyClientFieldChangedFlag)
 
     const [isBtnHovered, setIsBtnHovered] = useState<number | undefined>()
-    
+
     let wasAnythAdded = clientContactsLength === array.length
 
-    return <div className={c.arrayWrapper}>
-        <FieldArray name={name}>
+    const dispatch = useAppDispatch()
 
-            {({ insert, remove, push }) => <>
+    const syncEdit = (values: IContactPerson[]) => {
+        dispatch(syncEditClient({
+            _id: clientId, fieldName: 'contactPersons',
+            values
+        }))
+    }
 
-                <div className={c.header} >
-                    <h3>{title}</h3>
-                    <Button type="button" visible={wasAnythAdded}
-                        callBack={() => {
-                            push({ name: '', phone: '', email: '', job: '', note: '', isMain: false, preferredMethod: 'phone', })
-                            //syncEdit(array)
-                        }} >
-                        <span>добавить</span>
-                    </Button>
-                </div>
+    const name = 'persons'
 
-                <div onMouseLeave={() => setIsBtnHovered(undefined)}
-                    className={c.grid} >
+    return <Paper sx={{ mt: 2 }}>
+        <div>
+            <Formik initialValues={{ persons: array }}
+                onSubmit={(values, actions) => {
+                    console.log(values)
+                    dispatch(fetchEditClient({ _id: clientId, contactPersons: values.persons }))
+                }}
 
-                    {
-                        array.length > 0 &&
-                        array.map((elem, index) => {
+                render={({ values }) => (
 
-                            const isNew = index >= clientContactsLength
+                    <Form onChange={() => dispatch(setWasAnyClientFieldChangedFlag(true))}>
+                        <FieldArray name={name}>
 
-                            return <div key={index} className={c.line}
-                                onMouseOver={() => setIsBtnHovered(index)}>
-                                <Field name={`${name}.${index}.name`} type="text" placeholder='имя' /* onChange={} */ />
-                                <Field name={`${name}.${index}.phone`}>
-                                    {({ field }: { field: any }) => (
-                                        <ReactInputMask mask='+7 (999) 999 99 99' maskChar='*'
-                                            onChange={field.onChange}
-                                            name={field.name}
-                                            value={field.value}
-                                            placeholder='телефон' />
-                                    )}
-                                </Field>
-                                <Field name={`${name}.${index}.job`} type="text" placeholder='должность' />
-                                <Field name={`${name}.${index}.note`} type="text" placeholder='примечание' />
+                            {({ insert, remove, push }) => <>
 
-                                <NoBorderButton type='button' small={true} callBack={() => syncEdit(array)}
-                                    visible={isNew} >
-                                    <DoneIcon />
-                                </NoBorderButton>
+                                <div className={c.header} >
+                                    <h3>{title}</h3>
+                                    <Button type="button" visible={wasAnythAdded}
+                                        callBack={() => {
+                                            push({ name: '', phone: '', email: '', job: '', note: '', isMain: false, preferredMethod: 'phone', })
+                                            //syncEdit(array)
+                                        }} >
+                                        <span>добавить</span>
+                                    </Button>
+                                </div>
 
-                                <CancelButton callBack={() => {
-                                        remove(index)
-                                        const newArr = [...array]
-                                        newArr.splice(index, 1)
-                                        syncEdit(newArr)
-                                    }}
-                                    visible={isBtnHovered === index} />
+                                <div onMouseLeave={() => setIsBtnHovered(undefined)}
+                                    className={c.grid} >
 
-                            </div>
-                        })
-                    }
-                </div>
-            </>}
-        </FieldArray>
-    </div>
+                                    {
+                                        values.persons.length > 0 &&
+                                        values.persons.map((elem, index) => {
 
+                                            const isNew = index > clientContactsLength
+
+                                            return <div key={index} className={c.line}
+                                                onMouseOver={() => setIsBtnHovered(index)}>
+                                                <Field name={`${name}.${index}.name`} type="text" placeholder='имя' /* onChange={} */ />
+                                                <Field name={`${name}.${index}.phone`}>
+                                                    {({ field }: { field: any }) => (
+                                                        <ReactInputMask mask='+7 (999) 999 99 99' maskChar='*'
+                                                            onChange={field.onChange}
+                                                            name={field.name}
+                                                            value={field.value}
+                                                            placeholder='телефон' />
+                                                    )}
+                                                </Field>
+
+                                                <Box sx={() => appearingBtnStyles(!!values.persons[index].job?.length || isBtnHovered === index)}>
+                                                    <Field name={`${name}.${index}.job`} type="text" placeholder='должность' />
+                                                </Box>
+
+                                                <Box sx={() => appearingBtnStyles(!!values.persons[index].note?.length || isBtnHovered === index)}>
+                                                    <Field name={`${name}.${index}.note`} type="text" placeholder='примечание' />
+                                                </Box>
+
+                                                <div className={c.cancelBtnWrap}>
+                                                    <CancelButtonWithConfirm
+                                                        confirmTitle='Удалить контакт?'
+                                                        confirmBtnText='удалить'
+                                                        cancleBtnText='оставить'
+                                                        callBack={() => {
+                                                            remove(index)
+                                                            const newArr = [...array]
+                                                            newArr.splice(index, 1)
+                                                            syncEdit(newArr)
+                                                        }}
+                                                        visible={isBtnHovered === index} />
+                                                </div>
+
+                                            </div>
+                                        })
+                                    }
+                                </div>
+                            </>}
+                        </FieldArray>
+
+                        {wasAnyFieldChangedFlag &&
+                            <Button type='submit'>
+                                сохранить
+                            </Button>}
+                    </Form>
+                )}
+            />
+        </div>
+    </Paper>
 }
 
 export default ContactsFieldArray

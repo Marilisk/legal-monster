@@ -1,30 +1,19 @@
-import { memo, FC, useState } from 'react';
-import c from './CheckBox.module.scss';
+import { memo, FC } from 'react';
+import { Checkbox } from '@mui/material';
 
 
 interface ICheckBoxProps {
-    //value: boolean
-    callback: (e: React.ChangeEvent<HTMLInputElement>) => void
-    /**
-     * @name of input
-     * 
-     */
-    name?: string
+    callback: (v: boolean) => void
     checked?: boolean
 }
 
-const CheckBox: FC<ICheckBoxProps> = ({ /* value, */ callback, name, checked }: ICheckBoxProps) => {
+const CheckBox: FC<ICheckBoxProps> = ({ callback, checked }: ICheckBoxProps) => {
 
-    /* const [inputValue, setInputValue] = useState(value) */
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        //setInputValue(!inputValue)
-        callback(e)
+    const handleChange = () => {
+        callback(!checked)
     }
 
-    return <input className={c.checkBox}
-        type='checkbox'
-        name={name}
+    return <Checkbox
         onChange={handleChange}
         checked={checked} />
 

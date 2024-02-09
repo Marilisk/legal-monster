@@ -1,19 +1,12 @@
 @use './../../../vars.scss' as *;
 
 
-.arrayWrapper {
-    border-radius: 3px;
-    border: 1px solid $light-gray;
-    padding-top: 10px;
-    width: 100%;
-}
-
 .header {
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 14px;
+    // padding: 0 14px;
 
     h3 {
         margin-right: 20px;
@@ -28,26 +21,29 @@
 
 .grid {
     transition: all 100ms linear;
+
 }
 
 .line {
-    // display: flex;
-    padding: 10px;
+    padding: 40px 0 0 0;
     max-width: 100%;
     border-bottom: 1px solid $light-gray;
+    position: relative;
+
+
     &:last-child {
         border-color: transparent;
+        margin-bottom: 10px;
     }
     input {
         display: block;
-        flex: 2;
+        width: 100%;
         font-weight: 600;
-        padding: 4px;
+        padding: 8px 2px;
         padding-right: 0px;
         cursor: pointer;
         border: 1px solid transparent;
         color: #666666;
-        // width: 100px;
         &:focus {
             border: 1px solid $light-border-gray;
         }
@@ -56,6 +52,11 @@
             color: $light-fontcolor;
             font-style: italic;
         }
+    }
+    .cancelBtnWrap {
+        position: absolute;
+        top: 4px;
+        right: 0;
     }
 }
 

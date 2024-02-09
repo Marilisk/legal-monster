@@ -1,88 +1,164 @@
-$green: #11A834;
-$violet: #95009C;
-$dark-violet: #57005C;
-$thin-gray-border: 1px solid #D8D1CA;
-$light-beige-gray: #D8D1CA;
-$dark-fontcolor: #333333;
-$gray-fontcolor: #666666;
-$small-fontSize: 14px;
-$light-background: #FAFAFA;
-$serif-font-family: 'Playfair Display SC', serif;
+@use './../../vars.scss' as *;
 
 
-.loader {
+.loader,
+.smallLoader {
     font-size: 18px;
     width: 100%;
-    //border: 1px solid palevioletred;
+
     //height: 30px;
     //padding-left: 30px;
     //margin-top: 80px;
     span {
-        background: $gray-fontcolor;
+        background: $light-fontcolor;
         display: inline-block;
         height: 12px;
         width: 12px;
         border-radius: 50%;
         margin-right: 6px;
+
         &:first-child {
             -webkit-animation: blink1 1500ms linear infinite;
-                    animation: blink1 1500ms linear infinite;
+            animation: blink1 1500ms linear infinite;
         }
+
         &:nth-child(2) {
             -webkit-animation: blink2 1500ms linear infinite;
-                    animation: blink2 1500ms linear infinite;
+            animation: blink2 1500ms linear infinite;
         }
+
         &:nth-child(3) {
             -webkit-animation: blink3 1500ms linear infinite;
-                    animation: blink3 1500ms linear infinite;
+            animation: blink3 1500ms linear infinite;
+            margin-right: 0;
         }
-    }    
+    }
+}
+
+.smallLoader {
+    height: 120px;
+    width: 66px;
+    margin: 0 auto;
+    span {
+        margin-top: 50px;
+    }
 }
 
 
 
 @keyframes blink3 {
-    0% {opacity: 0; transform: scale(.1)}
-    50% {opacity: 1; transform: scale(1)}
-    100% {opacity: 0; transform: scale(.1)}
+    0% {
+        opacity: 0;
+        transform: scale(.1)
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1)
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(.1)
+    }
 }
 
 @keyframes blink2 {
-    0% {opacity: .3; transform: scale(.3)}
-    35% {opacity: 1; transform: scale(1)}
-    75% {opacity: 0; transform: scale(.1)}
-    100% {opacity: .3; transform: scale(.3)}
+    0% {
+        opacity: .3;
+        transform: scale(.3)
+    }
+
+    35% {
+        opacity: 1;
+        transform: scale(1)
+    }
+
+    75% {
+        opacity: 0;
+        transform: scale(.1)
+    }
+
+    100% {
+        opacity: .3;
+        transform: scale(.3)
+    }
 }
 
 @keyframes blink1 {
-    0% {opacity: .8; transform: scale(.8);}
-    15% {opacity: 1; transform: scale(1);}
-    60% {opacity: 0; transform: scale(.1);}
-    100% {opacity: .8; transform: scale(.8);}
+    0% {
+        opacity: .8;
+        transform: scale(.8);
+    }
+
+    15% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    60% {
+        opacity: 0;
+        transform: scale(.1);
+    }
+
+    100% {
+        opacity: .8;
+        transform: scale(.8);
+    }
 }
 
 
 @-webkit-keyframes blink2 {
-    0% {opacity: .3; }
-    35% {opacity: 1; }
-    75% {opacity: 0;}
-    100% {opacity: .3;}
+    0% {
+        opacity: .3;
+    }
+
+    35% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: .3;
+    }
 }
 
 @-webkit-keyframes blink3 {
-    0% {opacity: 0;}
-    50% {opacity: 1;}
-    100% {opacity: 0;}
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 
 
 
 @-webkit-keyframes blink1 {
-    0% {opacity: .8;}
-    15% {opacity: 1;}
-    60% {opacity: 0;}
-    100% {opacity: .8;}
+    0% {
+        opacity: .8;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: .8;
+    }
 }
 
 
@@ -91,25 +167,27 @@ $serif-font-family: 'Playfair Display SC', serif;
 .preloaderWrap {
     height: 100vh;
 }
+
 .container {
     width: -webkit-fit-content;
     width: -moz-fit-content;
     width: fit-content;
     margin: 0 auto;
     margin-top: calc(50vh - 25px);
+
     span {
         width: 50px;
         height: 50px;
         margin-right: 22px;
+
         &:last-child {
             margin-right: 0px;
         }
     }
+
     .loader {
         padding-left: 0;
         margin-top: 0px;
         height: auto;
     }
 }
-
-
