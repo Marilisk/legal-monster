@@ -17,10 +17,12 @@ export interface ICreateClientPayload {
     }>
     notes: IActivity[]
 }
+
+export type ClientFormType = 'юридическое лицо' | 'индивидуальный предприниматель' | 'физическое лицо'
 export interface IClient {
     _id: string
     name: string
-    form: 'юридическое лицо' | 'индивидуальный предприниматель' | 'физическое лицо'
+    form: ClientFormType
     INNnumber: string
     contactPersons: Array<IContactPerson>
     phase: {number: number, assignDateTimestamp: number }
@@ -40,7 +42,7 @@ export interface IClient {
     createdAt: string
 }
 
-// export type ClientFieldsType = keyof IClient
+export type ClientFieldsType = keyof IClient
 
 export type ClientActivityType = 'note' | 'task' | 'meeting' | 'document' | 'court'
 export interface IActivity {
@@ -77,6 +79,8 @@ export interface IContactPerson {
 export type ClientsType = {
     items: IClient[],
     status: LoadingStatusEnum
+    createClientStatus: LoadingStatusEnum
+    serverMessage: string
 }
 
 export type SalesPhaseType = {
@@ -134,4 +138,6 @@ export interface IDadataCompany {
         inn: string
     }
 }
+
+ 
 

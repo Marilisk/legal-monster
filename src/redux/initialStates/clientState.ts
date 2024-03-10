@@ -11,7 +11,9 @@ export interface IEditStaffPayload {
 export const clientsInitialState: ClientsInitStateType = {
     clients: {
         items: [],
-        status: LoadingStatusEnum.loaded,
+        status: LoadingStatusEnum.empty,
+        createClientStatus: LoadingStatusEnum.empty,
+        serverMessage: '',
     },
     loadedActivities: {},
     salesPipeline: [

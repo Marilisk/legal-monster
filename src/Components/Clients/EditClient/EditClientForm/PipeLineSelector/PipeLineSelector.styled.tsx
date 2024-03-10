@@ -5,6 +5,9 @@ export const stepSx = {
   cursor: 'pointer',
   '.MuiStepIcon-text': {
     fill: '#fff'
+  },
+  '.Mui-disabled': {
+    cursor: 'pointer',
   }
 }
 

@@ -18,18 +18,18 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      dispatch(refreshAuth()) 
+      dispatch(refreshAuth())
     }
-  }, [ dispatch ]);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!isAuth && !localStorage.getItem('token')   ) {
+    if (!isAuth && !localStorage.getItem('token')) {
       navigate('/login')
     }
   }, [navigate, isAuth, authLoadingStatus])
 
   useEffect(() => {
-    if (authLoadingStatus === LoadingStatusEnum.error && localStorage.getItem('token')   ) {
+    if (authLoadingStatus === LoadingStatusEnum.error && localStorage.getItem('token')) {
       localStorage.removeItem('token')
       navigate('/login')
     }
@@ -39,12 +39,12 @@ function App() {
 
   if (localStorage.getItem('token') && !isAuth) {
     return <LoadingDotsPreloader />
-  } 
-   if (authLoadingStatus === LoadingStatusEnum.loading) {
+  }
+  if (authLoadingStatus === LoadingStatusEnum.loading) {
     return <LoadingDotsPreloader />
-  } 
+  }
 
-  return <div >
+  return <div>
     <Header isAuth={isAuth} />
     <div className={c.appWrapper} >
       <Outlet />

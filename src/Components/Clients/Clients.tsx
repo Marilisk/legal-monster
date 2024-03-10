@@ -9,6 +9,7 @@ import { setOpenedFilter } from "../../redux/clientsSlice";
 import { IClient, SalesPhaseType } from "../../types/clientsTypes";
 import { filterClients } from "./functions/filter";
 import { createModal } from "../../utils/DialogCreator/DialogCreator";
+import { LoadingStatusEnum } from "../../types/userTypes";
 
 interface IClientsProps {
     clients: IClient[]
@@ -40,7 +41,10 @@ export const Clients: FC<IClientsProps> = ({ clients }: IClientsProps) => {
         onClick={handleSelectFilter} >
 
         <div className={c.header}>
-            <Button callBack={() => createModal({ component: <NewClient /> })} >
+            <Button callBack={() => createModal({ component: <NewClient />, 
+                // onClose: () => dispatch(setEditClientStatus(LoadingStatusEnum.empty)) 
+            })
+                } >
                 новый клиент
             </Button>
 

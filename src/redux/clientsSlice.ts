@@ -3,8 +3,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import instance from './api/api';
 import { LoadingStatusEnum } from '../types/userTypes';
 import { IEditStaffPayload, clientsInitialState } from './initialStates/clientState';
-import { startTransition } from 'react';
-import { act } from 'react-dom/test-utils';
 
 
 export const fetchCreateClient = createAsyncThunk('clients/fetchCreateClient', async (params: ICreateClientPayload) => {
@@ -12,12 +10,11 @@ export const fetchCreateClient = createAsyncThunk('clients/fetchCreateClient', a
     return response.data;
 })
 
-export const fetchEditClient = createAsyncThunk('clients/fetchEditClient', 
+export const fetchEditClient = createAsyncThunk('clients/fetchEditClient',
     async (params: Partial<IClient>) => {
-    console.log('params in Thunk', params)
-    let response = await instance.post('/clients/edit', params);
-    return response.data;
-})
+        let response = await instance.post('/clients/edit', params);
+        return response.data;
+    })
 
 export const fetchDeleteClient = createAsyncThunk('clients/fetchDeleteClient', async (param: string) => {
     let response = await instance.delete(`/clients/delete/${param}`);
@@ -47,22 +44,19 @@ export const fetchGetClients = createAsyncThunk('clients/fetchGetClients', async
     return response.data;
 })
 
-export const fetchGetOneClient = createAsyncThunk('clients/fetchGetOneClient', async (clientId:string) => {
+export const fetchGetOneClient = createAsyncThunk('clients/fetchGetOneClient', async (clientId: string) => {
     let response = await instance.get(`/clients/getone/${clientId}`);
     return response.data;
 })
 
 export const fetchGetClientActivities = createAsyncThunk('clients/fetchGetClientActivities', async (clientId: string) => {
-    // helpers.requestId = clientId
-    // console.log('helpers', helpers)
     let response = await instance.get(`/activities/getbyclient/${clientId}`);
     return { activities: response.data, clientId };
 })
 
-
 export const fetchEditClientStaff = createAsyncThunk('clients/fetchEditClientStaff', async (
     { clientId, newValuesArr, staffName }: IEditStaffPayload) => {
-    let response = await instance.patch(`/clients/staff/edit/${clientId}`, ({staffName, newValuesArr}));
+    let response = await instance.patch(`/clients/staff/edit/${clientId}`, ({ staffName, newValuesArr }));
     return { staff: response.data, clientId, staffName };
 })
 
@@ -78,7 +72,7 @@ const clientsSlice = createSlice({
             state.openedFilter = action.payload
         },
         syncEditClient(state, action: PayloadAction<{ _id: string, values: any, fieldName: ClientFieldsType }>) {
-             if (!state.wasAnyClientFieldChangedFlag) state.wasAnyClientFieldChangedFlag = true 
+            if (!state.wasAnyClientFieldChangedFlag) state.wasAnyClientFieldChangedFlag = true
             const editibleIdx = state.clients.items.findIndex(cl => cl._id === action.payload._id)
             if (editibleIdx >= 0) {
                 state.clients.items[editibleIdx][action.payload.fieldName as keyof IClient] = action.payload.values
@@ -88,19 +82,28 @@ const clientsSlice = createSlice({
         setWasAnyClientFieldChangedFlag(state, action) {
             state.wasAnyClientFieldChangedFlag = action.payload
         },
-
+        setEditClientStatus(state, action) {
+            state.clients.createClientStatus = action.payload
+        }
 
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCreateClient.pending, (state) => {
-            state.clients.status = LoadingStatusEnum.loading
+            state.clients.createClientStatus = LoadingStatusEnum.loading
         })
             .addCase(fetchCreateClient.fulfilled, (state, action) => {
-                state.clients.status = LoadingStatusEnum.loaded;
-                state.clients.items.push(action.payload);
+                if ('_id' in action.payload) {
+                    state.clients.createClientStatus = LoadingStatusEnum.loaded
+                    state.clients.items.push(action.payload)
+                } else {
+                    console.log('action', action)
+                    state.clients.serverMessage = action.payload.message
+                    state.clients.createClientStatus = LoadingStatusEnum.empty
+                }
             })
-            .addCase(fetchCreateClient.rejected, (state) => {
-                state.clients.status = LoadingStatusEnum.error;
+            .addCase(fetchCreateClient.rejected, (state, action) => {
+                state.clients.createClientStatus = LoadingStatusEnum.error;
+                state.clients.serverMessage = `Ошибка создания нового клиента`
             })
 
             .addCase(fetchGetClients.pending, (state) => {
@@ -119,14 +122,18 @@ const clientsSlice = createSlice({
             })
             .addCase(fetchGetOneClient.fulfilled, (state, action) => {
                 state.clients.status = LoadingStatusEnum.loaded;
-                state.clients.items = [...state.clients.items, ...action.payload ]
+                state.clients.items = [...state.clients.items, ...action.payload]
             })
             .addCase(fetchGetOneClient.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;
             })
 
-            .addCase(fetchEditClient.pending, (state) => {
-                state.clients.status = LoadingStatusEnum.loading
+            .addCase(fetchEditClient.pending, (state, action) => {
+                if ('phase' in action.meta.arg) {
+                    state.clients.status === LoadingStatusEnum.loaded
+                } else {
+                    state.clients.status = LoadingStatusEnum.loading
+                }
             })
             .addCase(fetchEditClient.fulfilled, (state, action) => {
                 const editibleItemIndex = state.clients.items.findIndex(el => el._id === action.payload._id)
@@ -145,7 +152,7 @@ const clientsSlice = createSlice({
                 state.clients.status = LoadingStatusEnum.loading
             })
             .addCase(fetchEditClientStaff.fulfilled, (state, action) => {
-                const staffName = action.payload.staffName 
+                const staffName = action.payload.staffName
                 const editibleItemIndex = state.clients.items.findIndex(el => el._id === action.payload.clientId)
                 if (editibleItemIndex || editibleItemIndex === 0) {
                     state.clients.items[editibleItemIndex][staffName] = action.payload.staff
@@ -172,16 +179,16 @@ const clientsSlice = createSlice({
             })
 
             .addCase(fetchGetClientActivities.pending, (state, action) => {
-                state.loadedActivities[action.meta.arg] = { 
-                    items: [], 
-                    status: LoadingStatusEnum.loading, 
-                    itemsInLoadingStatus: [] 
+                state.loadedActivities[action.meta.arg] = {
+                    items: [],
+                    status: LoadingStatusEnum.loading,
+                    itemsInLoadingStatus: []
                 }
             })
             .addCase(fetchGetClientActivities.fulfilled, (state, action) => {
-                state.loadedActivities[action.payload.clientId] = { 
-                    items: [], 
-                    status: LoadingStatusEnum.loaded, 
+                state.loadedActivities[action.payload.clientId] = {
+                    items: [],
+                    status: LoadingStatusEnum.loaded,
                     itemsInLoadingStatus: []
                 }
                 state.loadedActivities[action.payload.clientId].items = action.payload.activities
@@ -215,19 +222,19 @@ const clientsSlice = createSlice({
             })
             .addCase(fetchEditNote.fulfilled, (state, action) => {
                 const editibleActivities = state.loadedActivities[action.payload.activity.clientId].items
-                const editibleItemInd = editibleActivities.findIndex(act => act._id === action.payload.activity._id )
+                const editibleItemInd = editibleActivities.findIndex(act => act._id === action.payload.activity._id)
                 if (editibleItemInd || editibleItemInd === 0) {
                     editibleActivities[editibleItemInd] = action.payload.activity
                 }
                 state.wasAnyClientFieldChangedFlag = false
                 state.clients.status = LoadingStatusEnum.loaded
-                state.loadedActivities[action.meta.arg.clientId].itemsInLoadingStatus = 
+                state.loadedActivities[action.meta.arg.clientId].itemsInLoadingStatus =
                     state.loadedActivities[action.meta.arg.clientId].itemsInLoadingStatus.filter(item => item !== action.payload.activity._id)
             })
             .addCase(fetchEditNote.rejected, (state, action) => {
                 state.clients.status = LoadingStatusEnum.error;
                 state.wasAnyClientFieldChangedFlag = false
-                state.loadedActivities[action.meta.arg.clientId].itemsInLoadingStatus = 
+                state.loadedActivities[action.meta.arg.clientId].itemsInLoadingStatus =
                     state.loadedActivities[action.meta.arg.clientId].itemsInLoadingStatus.filter(item => item !== action.meta.arg._id)
             })
 
@@ -236,15 +243,13 @@ const clientsSlice = createSlice({
             })
             .addCase(fetchDeleteNote.fulfilled, (state, action) => {
                 state.loadedActivities[action.payload.clientId].items = state.loadedActivities[action.payload.clientId].items
-                    .filter(act => act._id !== action.payload.data.noteId )
+                    .filter(act => act._id !== action.payload.data.noteId)
                 state.clients.status = LoadingStatusEnum.loaded
 
             })
             .addCase(fetchDeleteNote.rejected, (state) => {
                 state.clients.status = LoadingStatusEnum.error;
             })
-
-
 
 
     },
@@ -257,5 +262,6 @@ export const {
     setOpenedFilter,
     syncEditClient,
     setWasAnyClientFieldChangedFlag,
+    setEditClientStatus,
 } = clientsSlice.actions;
 export default clientsSlice.reducer;

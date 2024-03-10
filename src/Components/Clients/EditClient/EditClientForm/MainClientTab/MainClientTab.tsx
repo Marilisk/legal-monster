@@ -1,4 +1,4 @@
-import { FC, /* startTransition,  */useEffect, useTransition } from 'react'
+import { FC, useEffect } from 'react'
 import { IClient } from '../../../../../types/clientsTypes'
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks'
 import ActivityArray from '../NotesArray/ActivityArray'
@@ -20,18 +20,14 @@ const MainClientTab: FC<IMainClientTabProps> = ({
     const loadingActivities = activities?.itemsInLoadingStatus
     const clientActivitiesLoadingStatus = useAppSelector(s => s.clients.loadedActivities[client._id]?.status)
 
-    const [isPending, startTransition] = useTransition();
-
     useEffect(() => {
         if (!activityArray) {
-            startTransition(() => {
                 dispatch(fetchGetClientActivities(client._id))
-            })
         }
     }, [client._id])
 
     if (clientActivitiesLoadingStatus === LoadingStatusEnum.loading) return <LoadingDots />
-    if (!activityArray || isPending) return null
+    if (!activityArray) return null
 
     return (
         <ActivityArray

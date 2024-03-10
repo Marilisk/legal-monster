@@ -12,6 +12,7 @@ import ContactsList from './components/ContactsList'
 import { selectIsOwner } from '../../../../../redux/authSlice'
 import EditClientDataForm from './components/EditClientDataForm'
 import ContactsFieldArray from '../../../../../assets/input elements/сreateFieldArray/ContactsFieldArray'
+import { LoadingDots } from '../../../../../assets/LoadingDots/LoadingDots'
 
 
 
@@ -23,6 +24,7 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
 
     const [editMode, setEditMode] = useState(false)
     const isOwner = useAppSelector(selectIsOwner)
+    const isLoading = useAppSelector(s => s.clients.clients.status === LoadingStatusEnum.loading)
 
     const {
         wasAnyFieldChangedFlag,
@@ -40,61 +42,68 @@ const InfoPart: FC<IInfoPartProps> = ({ client }: IInfoPartProps) => {
         wereLawyersLoaded: s.staff.lawyers.status === LoadingStatusEnum.loaded,
     }))
 
+    // if (!isLoading) return <LoadingDots />
 
     return (
         <div className={c.leftInfoPart} >
-            <Paper>
-                <div className={c.header}>
-                    <h2>Клиент</h2>
-                    <IconButton onClick={() => setEditMode(!editMode)} >
-                        <EditIcon color='#69BFAF' size={20} />
-                    </IconButton>
-                    <CloseButton />
-                </div>
-                <ContactsList contactPersons={client.contactPersons} />
-                <div>
-                    <p>создан: </p>
-                    {formatDate(new Date(Date.parse(client.createdAt)))}
-                </div>
+            {
+                isLoading ?
+                    <LoadingDots />
+                    :
+                    <>
+                        <Paper>
+                            <div className={c.header}>
+                                <h2>Клиент</h2>
+                                <IconButton onClick={() => setEditMode(!editMode)} >
+                                    <EditIcon color='#69BFAF' size={20} />
+                                </IconButton>
+                                <CloseButton />
+                            </div>
+                            <ContactsList contactPersons={client.contactPersons} />
+                            <div>
+                                <p>создан: </p>
+                                {formatDate(new Date(Date.parse(client.createdAt)))}
+                            </div>
 
-                <Collapse in={editMode}>
-                    <EditClientDataForm
-                        client={client}
-                        wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
-                    />
-                </Collapse>
+                            <Collapse in={editMode}>
+                                <EditClientDataForm
+                                    client={client}
+                                    wasAnyFieldChangedFlag={wasAnyFieldChangedFlag}
+                                />
+                            </Collapse>
 
-            </Paper>
+                        </Paper>
 
-            {client.form !== 'физическое лицо' &&
-                <ContactsFieldArray
-                    clientId={client._id}
-                    array={client.contactPersons}
-                    title='Контакты'
-                    clientContactsLength={client.contactPersons.length}
-                />
+                        {client.form !== 'физическое лицо' &&
+                            <ContactsFieldArray
+                                clientId={client._id}
+                                array={client.contactPersons}
+                                title='Контакты'
+                                clientContactsLength={client.contactPersons.length}
+                            />
+                        }
+
+                        {wereManagersLoaded && (canChangeResponsibleUser || isOwner)
+                            &&
+                            <StaffGroup name="managers"
+                                valuesArray={client.managers}
+                                variantsArray={myManagers}
+                                title='Ответственные менеджеры'
+                                clientId={client._id}
+                            />
+                        }
+
+                        {wereLawyersLoaded && (canChangeResponsibleUser || isOwner)
+                            &&
+                            <StaffGroup name="lawyers"
+                                valuesArray={client.lawyers}
+                                variantsArray={myLawyers}
+                                title='Ответственные юристы'
+                                clientId={client._id}
+                            />
+                        }
+                    </>
             }
-
-            {wereManagersLoaded && (canChangeResponsibleUser || isOwner)
-                &&
-                <StaffGroup name="managers"
-                    valuesArray={client.managers}
-                    variantsArray={myManagers}
-                    title='Ответственные менеджеры'
-                    clientId={client._id}
-                />
-            }
-
-            {wereLawyersLoaded && (canChangeResponsibleUser || isOwner)
-                &&
-                <StaffGroup name="lawyers"
-                    valuesArray={client.lawyers}
-                    variantsArray={myLawyers}
-                    title='Ответственные юристы'
-                    clientId={client._id}
-                />
-            }
-
         </div>
     )
 }

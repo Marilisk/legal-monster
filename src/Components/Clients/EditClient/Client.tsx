@@ -21,7 +21,6 @@ const Client: FC<IClientProps> = ({ clientId }: IClientProps) => {
     const dispatch = useAppDispatch()
 
     const client = useAppSelector(s => s.clients.clients.items.find(c => c._id === clientId))
-    const isLoading = useAppSelector(s => s.clients.clients.status === LoadingStatusEnum.loading)
 
     useEffect(() => {
         if (!client) {
@@ -29,9 +28,9 @@ const Client: FC<IClientProps> = ({ clientId }: IClientProps) => {
         }
     }, [clientId])
 
-    if (isLoading) return <LoadingDotsPreloader />
+    // if (isLoading) return <LoadingDotsPreloader />
     if (!client) {
-        return <div>NO client</div>
+        return <div>No client</div>
     }
 
     return <>

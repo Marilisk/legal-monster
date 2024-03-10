@@ -27,6 +27,7 @@ const theme = createTheme({
     text: {
       primary: '#36403E',
       disabled: '#7C7D7D',
+      // secondary: '#1C332E' // темный цвет из омновного
     },
     grey: {
       100: '#ececec',
@@ -136,6 +137,11 @@ const theme = createTheme({
     MuiTextField: {
       defaultProps: {
         variant: "filled",
+      }
+    },
+    MuiToggleButtonGroup: {
+      defaultProps: {
+        color: 'primary',
       }
     }
     

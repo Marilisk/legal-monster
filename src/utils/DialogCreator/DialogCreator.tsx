@@ -74,10 +74,10 @@ const Dialog = ({ component, onClose }: IDialogProps) => {
 
 interface IcreateModalProps {
     component: ReactNode
-
+    onClose?: () => void
 }
 
-export const createModal = ({ component, }: IcreateModalProps) => {
+export const createModal = ({ component, onClose, }: IcreateModalProps) => {
 
     let rootEl = document.getElementById('RootModalContainer');
 
@@ -89,7 +89,7 @@ export const createModal = ({ component, }: IcreateModalProps) => {
     document.body.appendChild(rootEl);
     createRoot(rootEl).render(
         <Provider store={store} >
-            <Dialog component={component} />
+            <Dialog component={component} onClose={onClose} />
         </Provider>
     )
 }

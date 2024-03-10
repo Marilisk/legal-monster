@@ -9,3 +9,15 @@
     //border: 1px solid orange;
     margin: 20px;
 }
+
+.phoneInput {
+    margin: 20px 0;
+
+    span {
+        margin-right: 20px;
+    }
+    input {
+        border-radius: 4px;
+        min-width: 200px;
+    }
+}

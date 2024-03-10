@@ -9,7 +9,6 @@ export const StyledTextField = styled(TextField)({
 }) as typeof TextField
 
 interface IFormTextFieldProps {
-    name?: string
     value: string
     label?: string
     validate?: (arg: string) => string | undefined

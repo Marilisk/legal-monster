@@ -1,46 +1,26 @@
 import { FC, useState } from 'react';
-import { useAppDispatch } from '../../../../redux/hooks';
-import { RadioBtnsGroup } from '../../../../assets/input elements/RadioBtnsGroup/RadioBtnsGroup';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import FormTextField from '../../../../assets/input elements/formTextField/FormTextField';
 import { Button } from '../../../../assets/input elements/button/Button';
 import c from './NewClientForm.module.scss'
-import impc from './../../../../assets/input elements/formTextField/FormTextField.module.scss'
 import { basicLengthValidate, flInnValidate, ulInnValidate } from '../../../Calendar/AddEventForm/validateForm';
-import { fetchCreateClient } from '../../../../redux/clientsSlice';
 import InputMask from 'react-input-mask';
 import PipeLineSelector from '../../EditClient/EditClientForm/PipeLineSelector/PipeLineSelector';
-import { Controller, useForm } from "react-hook-form";
+import { Tab, Tabs, Typography } from '@mui/material';
+import { ValuesType, initialValues, useCloseModal, useSubmit } from './NewClientFrom.helpers';
+import { clientFormsVariants } from '../../../../types/consts';
+import { LoadingStatusEnum } from '../../../../types/userTypes';
 
-interface INewClientFrom {
-    test?: string
-}
 
-export const NewClientForm: FC<INewClientFrom> = ({ test }: INewClientFrom) => {
+export const NewClientForm: FC = () => {
 
-    const dispatch = useAppDispatch()
-
-    const initialValues = {
-        name: '',
-        form: 'юридическое лицо',
-        INNnumber: '',
-        contactPersonName: '',
-        contactPersonPhone: '',
-        contactPersonJob: '',
-        contactPersonNote: '',
-        phase: {
-            number: 1,
-            assignDateTimestamp: 0,
-        },
-        managers: [],
-        lawyers: [],
-        contracts: [],
-        projects: [],
-        events: [],
-    }
-
-    type ValuesType = typeof initialValues
+    const { isLoading, serverMessage} = useAppSelector(s => ({
+        isLoading: s.clients.clients.createClientStatus === LoadingStatusEnum.loading,
+        serverMessage: s.clients.clients.serverMessage,
+    }))
 
     const [values, setValues] = useState(initialValues)
+    const [isError, setIsError] = useState(false)
 
     const handleChange = (
         field: keyof ValuesType,
@@ -49,122 +29,89 @@ export const NewClientForm: FC<INewClientFrom> = ({ test }: INewClientFrom) => {
         setValues({
             ...values, [field]: value,
         })
-
     }
 
-    const onSubmit = (values: ValuesType) => {
-        const payload = {
-            name: values.name,
-            form: values.form,
-            INNnumber: values.INNnumber,
-            contactPersons: [{
-                name: values.contactPersonName,
-                phone: values.contactPersonPhone,
-                job: values.contactPersonJob,
-                note: values.contactPersonNote,
-            }],
-            phase: { number: values.phase.number, assignDateTimestamp: values.phase.assignDateTimestamp },
-            managers: [],
-            lawyers: [],
-            contracts: [],
-            projects: [],
-            events: [],
-            notes: [],
-        }
-        dispatch(fetchCreateClient(payload))
-        setValues(initialValues)
-    }
+    const onSubmit = useSubmit(values, setValues)
 
-    const { register, handleSubmit, watch, formState: { errors }, control } = useForm({
-        defaultValues: initialValues,
+    useCloseModal(setValues)
 
-    })
+    const formValue = clientFormsVariants.indexOf(values.form)
 
 
     return <div className={c.wrap}>
-        <form onSubmit={handleSubmit((data) => {
-            console.log('onSubmit', data)
-        })}>
-            <div className={c.formBodyWrap}>
+        <div className={c.formBodyWrap}>
+            {
+                serverMessage && <Typography color='error' >
+                    {serverMessage}
+                </Typography>
+            }
 
+            <Tabs value={formValue} >
+                {clientFormsVariants.map((form, i) => (
+                    <Tab key={i} value={i}
+                        onClick={() => handleChange('form', form)}
+                        label={form}
+                    />
+                ))}
+            </Tabs>
 
-                <input {...register('name')} />
-
-                <RadioBtnsGroup values={['юридическое лицо', 'индивидуальный предприниматель', 'физическое лицо']}
-                    chosenValue={values.form}
-                    name='form'
-                    onChange={(v) => handleChange('form', v)}
+            {values.form !== 'физическое лицо' &&
+                <FormTextField
+                    value={values.INNnumber} label='ИНН'
+                    validate={values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
+                    onChange={(v) => handleChange('INNnumber', v)}
+                    onErrorDetect={(v) => setIsError(v)}
                 />
+            }
 
-                {values.form !== 'физическое лицо' &&
-                    <>
+            <FormTextField value={values.name}
+                label={values.form === 'физическое лицо' ? 'имя' : 'наименование'}
+                validate={(value) => basicLengthValidate(value, 3)}
+                onChange={(v) => handleChange('name', v)}
+                onErrorDetect={(v) => setIsError(v)}
+            />
 
-                        <Controller
-                            control={control}
-                            name='INNnumber'
-                            render={({ field }) => <FormTextField
-                                label='ИНН'
-                                {...field}
+            {values.form !== 'физическое лицо' &&
+                <>
+                    <h2>Контактное лицо:</h2>
+                    <FormTextField
+                        value={values.contactPersonName}
+                        label='имя'
+                        onChange={(v) => handleChange('contactPersonName', v)}
+                    />
+                </>
+            }
 
-                            // value={values.INNnumber} 
-                            // validate={values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
-                            // onChange={(v) => handleChange('INNnumber', v)}
-                            />}
-                        />
-                        {/* <FormTextField name="INNnumber" value={values.INNnumber} label='ИНН'
-                            // error={errors.INNnumber}
-                            validate={values.form === 'юридическое лицо' ? ulInnValidate : flInnValidate}
-                            // touched={touched.INNnumber}
-                            onChange={(v) => handleChange('INNnumber', v)}
-                        /> */}
-                    </>
-                }
+            <div className={c.phoneInput}>
+                <label>
+                    <span>
+                        телефон
+                    </span>
+                    <InputMask mask='+7 (999) 999 99 99' maskChar='*'
+                        onChange={(e) => handleChange('contactPersonPhone', e.target.value)}
+                        name='contactPersonPhone'
+                        value={values.contactPersonPhone}
 
-                <FormTextField name="name" value={values.name}
-                    label={values.form === 'физическое лицо' ? 'имя' : 'наименование'}
-                    // error={errors.name}
-                    validate={(value) => basicLengthValidate(value, 3)}
-                    // touched={touched.name}
-                    onChange={(v) => handleChange('form', v)}
-                />
+                    />
 
-                {values.form !== 'физическое лицо' &&
-                    <>
-                        <h2>Контактное лицо:</h2>
-                        <FormTextField
-                            value={values.contactPersonName}
-                            label='имя'
-                            onChange={(v) => handleChange('contactPersonName', v)}
-                        />
-                    </>
-                }
-
-                <div className={impc.lineWrap}>
-                    <label>
-                        <InputMask mask='+7 (999) 999 99 99' maskChar='*'
-                            onChange={(e) => handleChange('contactPersonPhone', e.target.value)}
-                            name='contactPersonPhone'
-                            value={values.contactPersonPhone} />
-                        <span className={values.contactPersonPhone.length > 0 ? impc.hangedLabel : undefined} >
-                            телефон
-                        </span>
-                    </label>
-                </div>
-
-                {/* сюда еще селект с менеджерами и юристами надо */}
-                <PipeLineSelector value={values.phase.number}
-                    // clientId={null}
-                    onChange={(v) => handleChange('phase', v)}
-                />
-
-                {/* и селект с свыбором ответственного сотрудника если роль руководителя */}
-
-                <div className={c.btnsContainer}>
-                    <Button type="submit"/*  disabled={Boolean(errors)} */>
-                        <span>добавить</span>
-                    </Button>
-                </div>
+                </label>
             </div>
-        </form>
+
+            {/* сюда еще селект с менеджерами и юристами надо */}
+            <PipeLineSelector value={values.phase.number}
+                onChange={(v) => handleChange('phase', v)}
+            />
+
+            {/* и селект с свыбором ответственного сотрудника если роль руководителя */}
+
+            <div className={c.btnsContainer}>
+                <Button type="submit"
+                    callBack={onSubmit}
+                    disabled={isError || isLoading}
+                >
+                    <span>добавить</span>
+                </Button>
+            </div>
+        </div>
     </div>
 }
